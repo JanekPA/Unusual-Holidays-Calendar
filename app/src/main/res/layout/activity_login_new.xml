@@ -8,80 +8,78 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".LoginActivity">
+    android:background="@color/WhiteLime"
+    tools:context=".SignInActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="36dp"
-        app:cardCornerRadius="30dp"
+        app:cardCornerRadius="36dp"
         app:cardElevation="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:background="@drawable/lime_border"
             android:gravity="center_horizontal"
-            android:background="@drawable/lavender_border">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Log in"
-                android:textSize="36dp"
                 android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="@color/Lavender"/>
-
+                android:textColor="@color/Lime"
+                android:textSize="36dp"
+                android:textStyle="bold" />
 
 
             <EditText
-                android:layout_width="match_parent"
+                android:id="@+id/text_login"
+                android:layout_width="312dp"
                 android:layout_height="50dp"
-                android:id="@+id/login_username"
-                android:background="@drawable/lavender_border"
                 android:layout_marginTop="40dp"
-                android:padding="8dp"
-                android:hint="Username"
-                android:drawableLeft="@drawable/baseline_account_circle_24"
+                android:background="@drawable/lime_border"
+                android:drawableLeft="@drawable/baseline_email_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="Email"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <EditText
-                android:layout_width="match_parent"
+                android:id="@+id/text_loginpassword"
+                android:layout_width="312dp"
                 android:layout_height="50dp"
-                android:id="@+id/login_password"
-                android:background="@drawable/lavender_border"
-                android:layout_marginTop="40dp"
-                android:padding="8dp"
-                android:hint="Password"
-                android:inputType="textPassword"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/lime_border"
                 android:drawableLeft="@drawable/baseline_lock_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/login_button"
-                android:layout_width="match_parent"
+                android:id="@+id/loginclick"
+                android:layout_width="312dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="50dp"
-                android:backgroundTint="#8692f7"
+                android:backgroundTint="#74c69d"
                 android:text="Log in!"
                 android:textSize="18sp"
                 app:cornerRadius="20dp" />
 
             <TextView
+                android:id="@+id/reditect_to_reg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/signupredirect"
-                android:text="Not a user? Register here."
                 android:layout_gravity="center"
+                android:layout_margin="20dp"
                 android:padding="8dp"
-                android:layout_margin="10dp"
-                android:textSize="18sp"
-                android:textColor="@color/Lavender"/>
-
-
+                android:text="Not a user? Register here."
+                android:textColor="@color/Lime"
+                android:textSize="18sp" />
 
 
         </LinearLayout>
