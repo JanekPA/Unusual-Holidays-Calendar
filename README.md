@@ -5,4 +5,4 @@ Kotlin - Android Studio - technologia aplikacji
 
 General project description:
 
-"Unusual Holidays Calendar" it's a mobile application with a functionality of a calendar and planner, which contains information and trivia about holidays on every day. It also offers reminder functions and is helpful in implementing plans for a given day.
+"Unusual Holidays Calendar" is a mobile application with a functionality of a calendar and planner, which contains information and trivia about holidays on every day. It also offers reminder functions and is helpful in implementing plans for a given day.
