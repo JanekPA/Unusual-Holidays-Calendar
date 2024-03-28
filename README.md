@@ -1,7 +1,7 @@
 Authors: Jan Włodarski, Maciej Rybak, Bartłomiej Zając
 Technologies: 
 Kotlin - Firebase - Database
-Kotlin - Android Studio - technologia aplikacji
+Kotlin - Android Studio - Application functionality
 
 General project description:
 
