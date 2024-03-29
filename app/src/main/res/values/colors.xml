@@ -12,4 +12,9 @@
     <color name="lavender">#8692f7</color>
     <color name="blue">#459DE4</color>
     <color name="red">#FF0000</color>
+    <color name="Bright_blue">#51e2f5</color>
+    <color name="Blue_green">#9df9ef</color>
+    <color name="Dusty_White">#edf756</color>
+    <color name="Pink_Sand">#ffa8B6</color>
+    <color name="Dark_Sand">#a28089</color>
 </resources>
