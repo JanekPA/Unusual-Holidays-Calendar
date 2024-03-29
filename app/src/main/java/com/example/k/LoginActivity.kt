@@ -12,6 +12,7 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginNewBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private var logCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +21,7 @@ class SignInActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.reditectToReg.setOnClickListener {
+        binding.redirectToReg.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
@@ -32,12 +33,17 @@ class SignInActivity : AppCompatActivity() {
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        val exception = task.exception
-                        when (exception) {
+                    if (task.isSuccessful && logCount!=0) {
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        startActivity(intent)
+                                    }
+                    else if (task.isSuccessful && logCount==0){
+                                        val intent = Intent(this,PersonalizationActivity::class.java)
+                                        startActivity(intent)
+                    }
+                    else {
+
+                        when (val exception = task.exception) {
                             is FirebaseAuthInvalidUserException -> {
                                 // Invalid email format
                                 Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
@@ -54,12 +60,5 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
 
-        if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-    }
 }
