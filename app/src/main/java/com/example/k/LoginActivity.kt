@@ -12,7 +12,6 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginNewBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    private var logCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +32,10 @@ class SignInActivity : AppCompatActivity() {
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
-                    if (task.isSuccessful && logCount!=0) {
+                    if (task.isSuccessful) {
                                         val intent = Intent(this, MainActivity::class.java)
                                         startActivity(intent)
                                     }
-                    else if (task.isSuccessful && logCount==0){
-                                        val intent = Intent(this,PersonalizationActivity::class.java)
-                                        startActivity(intent)
-                    }
                     else {
 
                         when (val exception = task.exception) {

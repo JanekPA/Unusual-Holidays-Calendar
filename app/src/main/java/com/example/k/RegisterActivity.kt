@@ -55,8 +55,8 @@ class SignUpActivity : AppCompatActivity() {
                         )
 
                         firebaseRef.child(user).setValue(datas)
-                        val intent2 = Intent(this, SignInActivity::class.java)
-                        startActivity(intent2)
+                        val intent = Intent(this, PersonalizationActivity::class.java)
+                        startActivity(intent)
                     } else {
                         val exception = task.exception
                         if (exception is FirebaseAuthInvalidCredentialsException) {
