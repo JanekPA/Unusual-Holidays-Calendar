@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="408dp"
+            android:layout_height="380dp"
             android:background="@drawable/lime_border"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -36,49 +36,25 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.807" />
 
-            <TextView
-                android:id="@+id/CountryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Country: "
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.123"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.228" />
-
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
+                android:hint="Country"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
                 app:layout_constraintStart_toEndOf="@+id/CountryText"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.238" />
-
-            <TextView
-                android:id="@+id/ActivityText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:text="Activities: "
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.126"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/CountryText"
-                app:layout_constraintVertical_bias="0.04" />
 
             <AutoCompleteTextView
                 android:id="@+id/activityAutoComplete"
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
+                android:hint="Activity"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
@@ -86,23 +62,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.238" />
 
-            <TextView
-                android:id="@+id/HobbyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hobby: "
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.143"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ActivityText"
-                app:layout_constraintVertical_bias="0.148" />
-
             <AutoCompleteTextView
                 android:id="@+id/hobbyAutoComplete"
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
+                android:hint="Hobby"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
