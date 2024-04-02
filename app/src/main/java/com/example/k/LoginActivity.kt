@@ -20,7 +20,7 @@ class SignInActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.reditectToReg.setOnClickListener {
+        binding.redirectToReg.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
@@ -33,11 +33,12 @@ class SignInActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        val exception = task.exception
-                        when (exception) {
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        startActivity(intent)
+                                    }
+                    else {
+
+                        when (val exception = task.exception) {
                             is FirebaseAuthInvalidUserException -> {
                                 // Invalid email format
                                 Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
@@ -54,12 +55,5 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
 
-        if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-    }
 }

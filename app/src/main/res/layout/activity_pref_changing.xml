@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PersonalizationActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/Bright_blue"
+        tools:context=".SignInActivity">>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="380dp"
+            android:background="@drawable/lime_border"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/PersonalizationText"
+                android:layout_width="278dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="51dp"
+                android:text="Change your preferences!"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/ChangecountryAutoComplete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.807" />
+
+            <AutoCompleteTextView
+                android:id="@+id/ChangecountryAutoComplete"
+                android:layout_width="165dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="1dp"
+                android:hint="Country"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.238" />
+
+            <AutoCompleteTextView
+                android:id="@+id/ChangeactivityAutoComplete"
+                android:layout_width="165dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="1dp"
+                android:hint="Activity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.238" />
+
+            <AutoCompleteTextView
+                android:id="@+id/ChangehobbyAutoComplete"
+                android:layout_width="165dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="1dp"
+                android:hint="Hobby"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.238" />
+
+            <Button
+                android:id="@+id/PersChangeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Change"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PersonalizationText"
+                app:layout_constraintVertical_bias="0.532" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

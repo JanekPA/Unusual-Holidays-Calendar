@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -7,11 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityRegisterNewBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.database.DatabaseReference
+import com.example.k.models.PersonalizationData
+import com.google.firebase.database.FirebaseDatabase
+
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterNewBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +28,8 @@ class SignUpActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.redirectToLog.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
+            val intent2 = Intent(this, SignInActivity::class.java)
+            startActivity(intent2)
         }
         binding.registerclick.setOnClickListener {
             val name = binding.textLoginName.text.toString()
@@ -36,11 +42,20 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            if (email.isNotEmpty() && pass.isNotEmpty()) {
+            firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
+            if (email.isNotEmpty() && pass.isNotEmpty() && user.isNotEmpty() && name.isNotEmpty()) {
                 firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val intent = Intent(this, SignInActivity::class.java)
+                        val sharedPreferences = getSharedPreferences("RegData",Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("nickname", user)
+                        editor.apply()
+                        val datas = PersonalizationData(
+                        user
+                        )
+
+                        firebaseRef.child(user).setValue(datas)
+                        val intent = Intent(this, PersonalizationActivity::class.java)
                         startActivity(intent)
                     } else {
                         val exception = task.exception
