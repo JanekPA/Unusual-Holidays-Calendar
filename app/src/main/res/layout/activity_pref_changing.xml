@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PersonalizationActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/WhiteLime"
+    tools:context=".SignInActivity">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        app:cardCornerRadius="36dp"
+        app:cardElevation="20dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="380dp"
-            android:background="@drawable/lime_border"
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -29,6 +39,7 @@
                 android:text="Change your preferences!"
                 android:textAlignment="center"
                 android:textSize="20dp"
+                android:textColor="@color/Lime"
                 app:layout_constraintBottom_toTopOf="@+id/ChangecountryAutoComplete"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.496"
@@ -41,7 +52,8 @@
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
-                android:hint="Country"
+                android:hint="   Country"
+                android:drawableLeft="@drawable/country"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
@@ -54,7 +66,8 @@
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
-                android:hint="Activity"
+                android:hint="   Activity"
+                android:drawableLeft="@drawable/sport"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
@@ -67,7 +80,8 @@
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
-                android:hint="Hobby"
+                android:hint="   Hobby"
+                android:drawableLeft="@drawable/hobby"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.157"
@@ -89,5 +103,5 @@
                 app:layout_constraintVertical_bias="0.532" />
         </LinearLayout>
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
