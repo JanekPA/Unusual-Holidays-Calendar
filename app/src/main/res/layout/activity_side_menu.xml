@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="287dp"
         android:layout_height="727dp"
-        android:background="@color/lavender"
+        android:background="@drawable/lime_border"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.008"
@@ -19,9 +19,15 @@
 
 
         <Button
+
+            android:padding="8dp"
             android:id="@+id/PrefChange"
-            android:layout_width="262dp"
-            android:layout_height="85dp"
-            android:text="Change preferences" />
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/lime_border"
+            android:drawableLeft="@drawable/preference"
+            android:text="Change preferences"
+            />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
