@@ -5,6 +5,8 @@ import android.widget.CalendarView
 import android.widget.CalendarView.OnDateChangeListener
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.k.databinding.ActivityCalendarViewBinding
 
 class CalendarView : AppCompatActivity() {
@@ -17,6 +19,11 @@ class CalendarView : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         dateTV = findViewById(R.id.idTVDate)
         calendarView = findViewById(R.id.calendarView)
