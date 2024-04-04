@@ -26,7 +26,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="380dp"
+            android:layout_height="300dp"
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -34,8 +34,8 @@
             <TextView
                 android:id="@+id/PersonalizationText"
                 android:layout_width="278dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="51dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
                 android:text="Change your preferences!"
                 android:textAlignment="center"
                 android:textSize="20dp"
@@ -47,55 +47,67 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.807" />
 
-            <AutoCompleteTextView
-                android:id="@+id/ChangecountryAutoComplete"
+            <ScrollView
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
-                android:hint="Country"
-                android:drawableLeft="@drawable/country"
-                android:drawablePadding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
                 app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintVertical_bias="0.238">
 
-            <AutoCompleteTextView
-                android:id="@+id/ChangeactivityAutoComplete"
-                android:layout_width="165dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="1dp"
-                android:hint="Activity"
-                android:drawableLeft="@drawable/sport"
-                android:drawablePadding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
-                app:layout_constraintStart_toEndOf="@+id/CountryText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                <AutoCompleteTextView
+                    android:id="@+id/ChangecountryAutoComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Country"
+                    android:drawableLeft="@drawable/country"
+                    android:drawablePadding="8dp" />
+            </ScrollView>
 
-            <AutoCompleteTextView
-                android:id="@+id/ChangehobbyAutoComplete"
+            <ScrollView
                 android:layout_width="165dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="1dp"
-                android:hint="Hobby"
-                android:drawableLeft="@drawable/hobby"
-                android:drawablePadding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
                 app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintVertical_bias="0.238">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ChangeactivityAutoComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Activity"
+                    android:drawableLeft="@drawable/sport"
+                    android:drawablePadding="8dp" />
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="165dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="1dp"
+                app:layout_constraintStart_toEndOf="@+id/CountryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintVertical_bias="0.238">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ChangehobbyAutoComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Hobby"
+                    android:drawableLeft="@drawable/hobby"
+                    android:drawablePadding="8dp" />
+            </ScrollView>
 
             <Button
                 android:id="@+id/PersChangeButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginTop="15dp"
                 android:text="Change"
                 app:layout_constraintBottom_toBottomOf="parent"
