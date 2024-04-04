@@ -22,6 +22,7 @@
 
             android:padding="8dp"
             android:id="@+id/PrefChange"
+
             android:layout_width="180dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
@@ -29,5 +30,13 @@
             android:drawableLeft="@drawable/preference"
             android:text="Change preferences"
             />
+
+        <Button
+            android:id="@+id/CalendarV"
+            android:layout_width="262dp"
+            android:layout_height="85dp"
+            android:text="Calendar"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="80dp"/>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

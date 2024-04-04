@@ -6,7 +6,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.k.databinding.ActivityPersonalizationBinding
 import com.example.k.databinding.ActivitySideMenuBinding
 
 class SideMenu : AppCompatActivity() {
@@ -23,6 +22,10 @@ class SideMenu : AppCompatActivity() {
         }
         binding.PrefChange.setOnClickListener{
             val intent = Intent(this,PrefChanging::class.java)
+            startActivity(intent)
+        }
+        binding.CalendarV.setOnClickListener{
+            val intent = Intent(this,CalendarView::class.java)
             startActivity(intent)
         }
     }
