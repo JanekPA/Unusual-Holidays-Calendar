@@ -7,10 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".SideMenu">
 
+    <include layout="@layout/activity_main" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+    android:id="@+id/overlay" />
+
     <FrameLayout
         android:layout_width="287dp"
-        android:layout_height="727dp"
-        android:background="@drawable/lime_border"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_sidemenu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.008"
@@ -20,21 +28,20 @@
 
         <Button
 
-            android:padding="8dp"
             android:id="@+id/PrefChange"
-
             android:layout_width="180dp"
+
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/lime_border"
             android:drawableLeft="@drawable/preference"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
+            android:padding="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="Change preferences"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/CalendarV"

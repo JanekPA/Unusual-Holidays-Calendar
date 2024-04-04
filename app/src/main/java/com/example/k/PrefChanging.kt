@@ -2,6 +2,7 @@ package com.example.k
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -48,10 +49,20 @@ class PrefChanging : AppCompatActivity() {
         val activity = binding.ChangeactivityAutoComplete.text.toString()
         val hobby = binding.ChangehobbyAutoComplete.text.toString()
 
+        val countries = resources.getStringArray(R.array.countries)
+        val activities = resources.getStringArray(R.array.activities)
+        val hobbys = resources.getStringArray(R.array.hobbys)
+
         if (country.isEmpty() || activity.isEmpty() || hobby.isEmpty()) {
             if (country.isEmpty()) binding.ChangecountryAutoComplete.error = "Choose a country!"
             if (activity.isEmpty()) binding.ChangeactivityAutoComplete.error = "Choose an activity!"
             if (hobby.isEmpty()) binding.ChangehobbyAutoComplete.error = "Choose a hobby!"
+        } else if (!countries.contains(country)) {
+            binding.ChangecountryAutoComplete.error = "No country specified in the database!"
+        } else if (!activities.contains(activity)) {
+            binding.ChangeactivityAutoComplete.error = "No activity specified in the database!"
+        } else if (!hobbys.contains(hobby)) {
+            binding.ChangehobbyAutoComplete.error = "No hobby specified in the database!"
         } else {
             val sharedPreferences = getSharedPreferences("RegData",Context.MODE_PRIVATE)
             val nickname = sharedPreferences.getString("nickname","")
@@ -62,9 +73,7 @@ class PrefChanging : AppCompatActivity() {
                 hobby
             )
             if (nickname != null) {
-
                 firebaseRef.child(nickname).setValue(datas)
-
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT).show()
                     }
@@ -75,6 +84,5 @@ class PrefChanging : AppCompatActivity() {
             val persDone = Intent(this, MainActivity::class.java)
             startActivity(persDone)
         }
-
     }
 }
