@@ -26,6 +26,9 @@
             android:name=".PersonalizationActivity"
             android:exported="false" />
         <activity
+            android:name=".CalendarView"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity
