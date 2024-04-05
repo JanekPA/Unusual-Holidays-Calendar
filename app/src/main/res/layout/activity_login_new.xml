@@ -17,7 +17,15 @@
         android:layout_margin="36dp"
         app:cardCornerRadius="36dp"
         app:cardElevation="20dp">
-
+        <Button
+            android:id="@+id/devlog"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/dev_log"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

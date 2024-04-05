@@ -33,11 +33,9 @@ class SignInActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                                        val intent = Intent(this, MainActivity::class.java)
-                                        startActivity(intent)
-                                    }
-                    else {
-
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
                         when (val exception = task.exception) {
                             is FirebaseAuthInvalidUserException -> {
                                 // Invalid email format
@@ -53,7 +51,22 @@ class SignInActivity : AppCompatActivity() {
                 Toast.makeText(this, "Empty Fields Are not Allowed", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Add click listener for "devlog" button
+        binding.devlog.setOnClickListener {
+            val devEmail = "email@gmail.com"
+            val devPassword = "Password"
+
+            firebaseAuth.signInWithEmailAndPassword(devEmail, devPassword).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "DevLogin", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // Handle login failure
+                    Toast.makeText(this, "Failed to log in with developer credentials", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
-
-
 }
