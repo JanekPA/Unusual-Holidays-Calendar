@@ -1,7 +1,6 @@
 package com.example.k
 
 import android.content.Context
-import android.widget.AutoCompleteTextView
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,38 +9,112 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import com.example.k.databinding.ActivityPersonalizationBinding
+import com.example.k.models.ListItem
+import com.example.k.models.MultiSelectSpinnerAdapter
 import com.example.k.models.PersonalizationData
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class PersonalizationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPersonalizationBinding
+    private var selectedActivity: MutableList<ListItem>? = mutableListOf()
+    private var spinnerActivityListItem: ArrayList<ListItem>? = ArrayList()
+    private var selectedHobby: MutableList<ListItem> = mutableListOf()
+    private var spinnerHobbyListItem: ArrayList<ListItem>? = ArrayList()
+    private var spinnerActivity: Spinner? = null
+    private var spinnerHobby: Spinner? = null
+    private var nameActivity: TextView? = null
+    private var nameHobby: TextView? = null
 
-    private lateinit var firebaseRef : DatabaseReference
+    private lateinit var firebaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityPersonalizationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        spinnerActivity = findViewById(R.id.activitySpinner)
+        spinnerHobby = findViewById(R.id.hobbySpinner)
+        nameActivity = findViewById(R.id.activityHead)
+        nameHobby = findViewById(R.id.hobbyHead)
+
+        val activitiesArray = resources.getStringArray(R.array.activities)
+        for (activity in activitiesArray) {
+            spinnerActivityListItem?.add(ListItem(activity))
+        }
+
+        selectedActivity!!.clear()
+
+        val hobbyArray = resources.getStringArray(R.array.hobbys)
+        for (hobby in hobbyArray) {
+            spinnerHobbyListItem?.add(ListItem(hobby))
+        }
+
+        selectedHobby.clear()
+
+
+        val adapter = MultiSelectSpinnerAdapter(
+            this,
+            spinnerActivityListItem!!,
+            selectedActivity!!
+        )
+
+        spinnerActivity?.adapter = adapter
+
+        adapter.setOnItemSelectedListener(object :
+            MultiSelectSpinnerAdapter.OnItemSelectedListener {
+            override fun onItemSelected(
+                selectedItems: List<ListItem>,
+                pos: Int,
+            ) {
+                    nameActivity?.text = "Activity"
+                Log.e("getSelectedItems", selectedItems.toString())
+                Log.e("getSelectedItems", selectedItems.size.toString())
+            }
+        }
+        )
+
+        val adapter2 = MultiSelectSpinnerAdapter(
+            this,
+            spinnerHobbyListItem!!,
+            selectedHobby
+        )
+
+        spinnerHobby?.adapter = adapter2
+
+        adapter2.setOnItemSelectedListener(object :
+            MultiSelectSpinnerAdapter.OnItemSelectedListener {
+            override fun onItemSelected(
+                selectedItems: List<ListItem>,
+                pos: Int,
+            ) {
+                    nameHobby?.text = "Hobby"
+
+                Log.e("getSelectedItems", selectedItems.toString())
+                Log.e("getSelectedItems", selectedItems.size.toString())
+            }
+        }
+        )
+
+
         val countries = resources.getStringArray(R.array.countries)
-        val activities = resources.getStringArray(R.array.activities)
-        val hobbys = resources.getStringArray(R.array.hobbys)
-        val arrayCountries = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
-        val arrayActivities = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,activities)
-        val arrayHobbys = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,hobbys)
-        binding.countryAutoComplete.setAdapter(arrayCountries)
-        binding.activityAutoComplete.setAdapter(arrayActivities)
-        binding.hobbyAutoComplete.setAdapter(arrayHobbys)
+        val arrayCountries =
+            ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries)
+        binding.ChangecountryAutoComplete.setAdapter(arrayCountries)
+        binding.activitySpinner.setAdapter(adapter)
+        binding.hobbySpinner.setAdapter(adapter2)
 
 
 
 
         firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
 
-        binding.PersDoneButton.setOnClickListener{
+        binding.PersDoneButton.setOnClickListener {
             saveData()
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -52,38 +125,45 @@ class PersonalizationActivity : AppCompatActivity() {
     }
 
     private fun saveData() {
-        val chosenCountry = binding.countryAutoComplete.text.toString()
-        val chosenActivity = binding.activityAutoComplete.text.toString()
-        val chosenHobby = binding.hobbyAutoComplete.text.toString()
+        val country = binding.ChangecountryAutoComplete.text.toString()
+        val activity = selectedActivity?.map { it.name }
+        val hobby = selectedHobby.map { it.name }
 
-            if(chosenCountry.isEmpty() || chosenActivity.isEmpty() || chosenHobby.isEmpty()){
-            if (chosenCountry.isEmpty()) binding.countryAutoComplete.error = "Choose a country!"
-            if (chosenActivity.isEmpty()) binding.activityAutoComplete.error = "Choose an activity!"
-            if (chosenHobby.isEmpty()) binding.hobbyAutoComplete.error = "Choose a hobby!"
-                }
-            else {
-                val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
-                val nickname = sharedPreferences.getString("nickname","")
-                val datas = PersonalizationData(
-                    nickname,
-                    chosenCountry,
-                    chosenActivity,
-                    chosenHobby
-                )
-                if (nickname != null) {
-                    firebaseRef.child(nickname).setValue(datas)
+        val countries = resources.getStringArray(R.array.countries)
 
-                        .addOnCompleteListener {
-                            Toast.makeText(this, "Data stored successfully!", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "error ${it.message}", Toast.LENGTH_SHORT).show()
-                        }
-                }
-                val persDone = Intent(this, MainActivity::class.java)
-                startActivity(persDone)
+        if (country.isEmpty() || activity!!.isEmpty() || hobby.isEmpty()) {
+            if (country.isEmpty()) binding.ChangecountryAutoComplete.error = "Choose a country!"
+            if (activity!!.isEmpty()) Toast.makeText(
+                this,
+                "Choose an activity!",
+                Toast.LENGTH_SHORT
+            ).show()
+            if (hobby.isEmpty()) Toast.makeText(this, "Choose a hobby!", Toast.LENGTH_SHORT).show()
+        } else if (!countries.contains(country)) {
+            binding.ChangecountryAutoComplete.error = "No country specified in the database!"
+        } else {
+            val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+            val nickname = sharedPreferences.getString("nickname", "")
+            val datas = PersonalizationData(
+                nickname,
+                country,
+                activity.toString(),
+                hobby.toString()
+            )
+            if (nickname != null) {
+                firebaseRef.child(nickname).setValue(datas)
+                    .addOnCompleteListener {
+                        Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "error ${it.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
+            val persDone = Intent(this, MainActivity::class.java)
+            startActivity(persDone)
         }
     }
+}
 
 

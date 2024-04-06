@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,92 +16,111 @@
         android:layout_margin="36dp"
         app:cardCornerRadius="36dp"
         app:cardElevation="20dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:gravity="center"
-        tools:context=".SignInActivity">>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="380dp"
-            android:background="@drawable/lime_border"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/Bright_blue"
+            tools:context=".SignInActivity">
 
-            <TextView
-                android:id="@+id/PersonalizationText"
-                android:layout_width="278dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="51dp"
-                android:text="Personalize your account!"
-                android:textAlignment="center"
-                android:textColor="@color/Lime"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/countryAutoComplete"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.807" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:background="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/countryAutoComplete"
-                android:layout_width="165dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="1dp"
-                android:hint="   Country"
-                android:drawableLeft="@drawable/country"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
-                app:layout_constraintStart_toEndOf="@+id/CountryText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                <TextView
+                    android:id="@+id/PersonalizationText"
+                    android:layout_width="278dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="30dp"
+                    android:text="Set your preferences!"
+                    android:textAlignment="center"
+                    android:textColor="@color/Lime"
+                    android:textSize="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/ChangecountryAutoComplete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.807" />
 
-            <AutoCompleteTextView
-                android:id="@+id/activityAutoComplete"
-                android:layout_width="165dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="1dp"
-                android:hint="   Activity"
-                android:drawableLeft="@drawable/sport"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
-                app:layout_constraintStart_toEndOf="@+id/CountryText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                <ScrollView
+                    android:layout_width="165dp"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.157"
+                    app:layout_constraintStart_toEndOf="@+id/CountryText"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.238">
 
-            <AutoCompleteTextView
-                android:id="@+id/hobbyAutoComplete"
-                android:layout_width="165dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="1dp"
-                android:hint="   Hobby"
-                android:drawableLeft="@drawable/hobby"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
-                app:layout_constraintStart_toEndOf="@+id/CountryText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.238" />
+                    <AutoCompleteTextView
+                        android:id="@+id/ChangecountryAutoComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/country"
+                        android:drawablePadding="8dp"
+                        android:hint="Country" />
+                </ScrollView>
+                <TextView
+                    android:id="@+id/activityHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activity"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/PersDoneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Done"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PersonalizationText"
-                app:layout_constraintVertical_bias="0.532" />
+                <Spinner
+                    android:id="@+id/activitySpinner"
+                    android:layout_marginTop="1dp"
+                    android:layout_width="165dp"
+                    android:layout_height="52dp"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintTop_toBottomOf="@id/activityHead"
+                    app:layout_constraintStart_toStartOf="@id/activityHead"
+                    app:layout_constraintEnd_toEndOf="@id/activityHead"/>
+
+                <TextView
+                    android:id="@+id/hobbyHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hobby"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/hobbySpinner"
+                    android:layout_marginTop="1dp"
+                    android:layout_width="165dp"
+                    android:layout_height="52dp"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintTop_toBottomOf="@id/hobbyHead"
+                    app:layout_constraintStart_toStartOf="@id/hobbyHead"
+                    app:layout_constraintEnd_toEndOf="@id/hobbyHead"/>
+
+                <Button
+                    android:id="@+id/PersDoneButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Set"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PersonalizationText"
+                    app:layout_constraintVertical_bias="0.532" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
     </androidx.cardview.widget.CardView>
+
 </LinearLayout>
