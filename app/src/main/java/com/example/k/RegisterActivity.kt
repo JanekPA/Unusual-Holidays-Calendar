@@ -46,17 +46,19 @@ class SignUpActivity : AppCompatActivity() {
             if (email.isNotEmpty() && pass.isNotEmpty() && user.isNotEmpty() && name.isNotEmpty()) {
                 firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val sharedPreferences = getSharedPreferences("RegData",Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.putString("nickname", user)
-                        editor.apply()
-                        val datas = PersonalizationData(
-                        user
-                        )
-
-                        firebaseRef.child(user).setValue(datas)
-                        val intent = Intent(this, PersonalizationActivity::class.java)
-                        startActivity(intent)
+                        val user = firebaseAuth.currentUser
+                        user?.let {
+                            val uid = user.uid // Get the UID of the newly registered user
+                            val name = binding.textLoginName.text.toString() // Get the name from the EditText field
+                            val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+                            val editor = sharedPreferences.edit()
+                            editor.putString("nickname", name) // Store the name in SharedPreferences
+                            editor.apply()
+                            val datas = PersonalizationData(name) // Use the name in PersonalizationData
+                            firebaseRef.child(uid).setValue(datas) // Set the data under UID branch
+                            val intent = Intent(this, PersonalizationActivity::class.java)
+                            startActivity(intent)
+                        }
                     } else {
                         val exception = task.exception
                         if (exception is FirebaseAuthInvalidCredentialsException) {

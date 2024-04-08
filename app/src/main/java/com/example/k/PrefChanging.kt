@@ -19,8 +19,11 @@ import com.example.k.databinding.ActivityPrefChangingBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
 import com.example.k.models.PersonalizationData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.util.Arrays
 
 class PrefChanging : AppCompatActivity() {
     private lateinit var binding: ActivityPrefChangingBinding
@@ -122,12 +125,12 @@ class PrefChanging : AppCompatActivity() {
 
     private fun updateData() {
         val country = binding.ChangecountryAutoComplete.text.toString()
-        val activity = selectedActivity?.map{it.name}
-        val hobby = selectedHobby.map{it.name}
+        val activity = selectedActivity?.map { it.name  to it.itemId}?.toMap()
+        val hobby = selectedHobby.map { it.name to it.itemId }.toMap()
 
         val countries = resources.getStringArray(R.array.countries)
 
-        if (country.isEmpty() || activity!!.isEmpty() || hobby.isEmpty()) {
+        if (country.isEmpty() || activity!!.isNullOrEmpty() || hobby.isEmpty()) {
             if (country.isEmpty()) binding.ChangecountryAutoComplete.error = "Choose a country!"
             if (activity!!.isEmpty()) Toast.makeText(this, "Choose an activity!", Toast.LENGTH_SHORT).show()
             if (hobby.isEmpty()) Toast.makeText(this, "Choose a hobby!", Toast.LENGTH_SHORT).show()
@@ -136,36 +139,33 @@ class PrefChanging : AppCompatActivity() {
         }  else {
             val sharedPreferences = getSharedPreferences("RegData",Context.MODE_PRIVATE)
             val nickname = sharedPreferences.getString("nickname","")
-            val datas = PersonalizationData(
-                nickname,
-                country,
-                activity.toString(),
-                hobby.toString()
-            )
-            if (nickname != null) {
-                firebaseRef.child(nickname).setValue(datas)
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+                val datas = PersonalizationData(
+                    nickname,
+                    )
+                val firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
+                firebaseRef.child(uid).setValue(datas)
+                val countryId = Arrays.asList(*resources.getStringArray(R.array.countries)).indexOf(country) + 1
+                val countryData = PersonalizationActivity.CountryData(country, countryId)
+                firebaseRef.child(uid).child("Country").setValue(countryData)
+                firebaseRef.child(uid).child("Activities").setValue(activity)
+                firebaseRef.child(uid).child("Hobbies").setValue(hobby)
                     .addOnCompleteListener {
-                        Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     .addOnFailureListener {
                         Toast.makeText(this, "error ${it.message}", Toast.LENGTH_SHORT).show()
                     }
+
             }
             val persDone = Intent(this, MainActivity::class.java)
             startActivity(persDone)
         }
     }
-    private val Spinner.selectedItems: List<String>
-        get() {
-            val selectedItems = mutableListOf<String>()
-            for(i in 0 until count)
-            {
-                if(isSelected)
-                {
-                    selectedItems.add(getItemAtPosition(i).toString())
-                }
-            }
-            return selectedItems
-        }
+
 
 }
