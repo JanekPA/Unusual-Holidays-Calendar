@@ -18,7 +18,7 @@ import com.example.k.models.MultiSelectSpinnerAdapter
 import com.example.k.models.PersonalizationData
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-
+import com.google.firebase.auth.FirebaseAuth
 class PersonalizationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPersonalizationBinding
     private var selectedActivity: MutableList<ListItem>? = mutableListOf()
@@ -29,6 +29,7 @@ class PersonalizationActivity : AppCompatActivity() {
     private var spinnerHobby: Spinner? = null
     private var nameActivity: TextView? = null
     private var nameHobby: TextView? = null
+    private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var firebaseRef: DatabaseReference
 
@@ -72,7 +73,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 selectedItems: List<ListItem>,
                 pos: Int,
             ) {
-                    nameActivity?.text = "Activity"
+                nameActivity?.text = "Activity"
                 Log.e("getSelectedItems", selectedItems.toString())
                 Log.e("getSelectedItems", selectedItems.size.toString())
             }
@@ -93,7 +94,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 selectedItems: List<ListItem>,
                 pos: Int,
             ) {
-                    nameHobby?.text = "Hobby"
+                nameHobby?.text = "Hobby"
 
                 Log.e("getSelectedItems", selectedItems.toString())
                 Log.e("getSelectedItems", selectedItems.size.toString())
@@ -131,39 +132,44 @@ class PersonalizationActivity : AppCompatActivity() {
 
         val countries = resources.getStringArray(R.array.countries)
 
-        if (country.isEmpty() || activity!!.isEmpty() || hobby.isEmpty()) {
+        if (country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
             if (country.isEmpty()) binding.ChangecountryAutoComplete.error = "Choose a country!"
-            if (activity!!.isEmpty()) Toast.makeText(
+            if (activity.isNullOrEmpty()) Toast.makeText(
                 this,
                 "Choose an activity!",
                 Toast.LENGTH_SHORT
             ).show()
-            if (hobby.isEmpty()) Toast.makeText(this, "Choose a hobby!", Toast.LENGTH_SHORT).show()
+            if (hobby.isNullOrEmpty()) Toast.makeText(this, "Choose a hobby!", Toast.LENGTH_SHORT)
+                .show()
         } else if (!countries.contains(country)) {
             binding.ChangecountryAutoComplete.error = "No country specified in the database!"
         } else {
             val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
-            val nickname = sharedPreferences.getString("nickname", "")
-            val datas = PersonalizationData(
-                nickname,
-                country,
-                activity.toString(),
-                hobby.toString()
-            )
-            if (nickname != null) {
-                firebaseRef.child(nickname).setValue(datas)
+            val username = sharedPreferences.getString("nickname", "")
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+                val datas = PersonalizationData(
+                    username, // Include username here
+                    country,
+                    activity.toString(),
+                    hobby.toString()
+                )
+                val firebaseRef =
+                    FirebaseDatabase.getInstance().getReference("UsersPersonalization")
+                firebaseRef.child(uid).setValue(datas)
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT)
                             .show()
+                        val persDone = Intent(this, MainActivity::class.java)
+                        startActivity(persDone)
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "error ${it.message}", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
+                            .show()
                     }
             }
-            val persDone = Intent(this, MainActivity::class.java)
-            startActivity(persDone)
         }
     }
 }
-
-
