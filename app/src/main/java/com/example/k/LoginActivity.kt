@@ -54,8 +54,8 @@ class SignInActivity : AppCompatActivity() {
 
         // Add click listener for "devlog" button
         binding.devlog.setOnClickListener {
-            val devEmail = "email@gmail.com"
-            val devPassword = "Password"
+            val devEmail = "emailf@gmail.com"
+            val devPassword = "password"
 
             firebaseAuth.signInWithEmailAndPassword(devEmail, devPassword).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
