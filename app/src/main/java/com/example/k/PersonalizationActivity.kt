@@ -19,6 +19,8 @@ import com.example.k.models.PersonalizationData
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Arrays
+
 class PersonalizationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPersonalizationBinding
     private var selectedActivity: MutableList<ListItem>? = mutableListOf()
@@ -29,7 +31,6 @@ class PersonalizationActivity : AppCompatActivity() {
     private var spinnerHobby: Spinner? = null
     private var nameActivity: TextView? = null
     private var nameHobby: TextView? = null
-    private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var firebaseRef: DatabaseReference
 
@@ -104,8 +105,9 @@ class PersonalizationActivity : AppCompatActivity() {
 
 
         val countries = resources.getStringArray(R.array.countries)
-        val arrayCountries =
-            ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries)
+
+        val arrayCountries = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries)
+
         binding.ChangecountryAutoComplete.setAdapter(arrayCountries)
         binding.activitySpinner.setAdapter(adapter)
         binding.hobbySpinner.setAdapter(adapter2)
@@ -127,8 +129,8 @@ class PersonalizationActivity : AppCompatActivity() {
 
     private fun saveData() {
         val country = binding.ChangecountryAutoComplete.text.toString()
-        val activity = selectedActivity?.map { it.name }
-        val hobby = selectedHobby.map { it.name }
+        val activity = selectedActivity?.map { it.name  to it.itemId}?.toMap()
+        val hobby = selectedHobby.map { it.name to it.itemId }.toMap()
 
         val countries = resources.getStringArray(R.array.countries)
 
@@ -151,14 +153,15 @@ class PersonalizationActivity : AppCompatActivity() {
             firebaseUser?.let { user ->
                 val uid = user.uid
                 val datas = PersonalizationData(
-                    username, // Include username here
-                    country,
-                    activity.toString(),
-                    hobby.toString()
+                    username,
                 )
-                val firebaseRef =
-                    FirebaseDatabase.getInstance().getReference("UsersPersonalization")
+                val firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
                 firebaseRef.child(uid).setValue(datas)
+                val countryId = Arrays.asList(*resources.getStringArray(R.array.countries)).indexOf(country) + 1
+                val countryData = CountryData(country, countryId)
+                    firebaseRef.child(uid).child("Country").setValue(countryData)
+                    firebaseRef.child(uid).child("Activities").setValue(activity)
+                        firebaseRef.child(uid).child("Hobbies").setValue(hobby)
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT)
                             .show()
@@ -172,4 +175,7 @@ class PersonalizationActivity : AppCompatActivity() {
             }
         }
     }
+
+    data class CountryData(val name: String, val id: Int)
+    {}
 }
