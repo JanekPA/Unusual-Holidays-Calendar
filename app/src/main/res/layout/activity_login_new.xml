@@ -68,6 +68,24 @@
                 android:padding="8dp"
                 android:textColor="@color/black" />
 
+            <CheckBox
+                android:id="@+id/remember_me"
+                android:layout_width="170dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="90dp"
+                android:text="Remember me"
+                android:buttonTint="@color/black"
+                android:textColor="@color/Lime"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/text_loginpassword"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="6dp"
+                android:paddingTop="2px"
+                />
+
             <Button
                 android:id="@+id/loginclick"
                 android:layout_width="312dp"

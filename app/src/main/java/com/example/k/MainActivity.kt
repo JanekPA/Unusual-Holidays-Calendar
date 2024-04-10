@@ -94,6 +94,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SignInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        val preferences = getSharedPreferences("checkbox",MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.putString("remember","false")
+        editor.apply()
         finish()
         Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show()
     }
