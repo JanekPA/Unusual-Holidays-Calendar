@@ -1,7 +1,9 @@
 package com.example.k
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityLoginNewBinding
@@ -13,12 +15,44 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginNewBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
+
+         val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
+         val checkBox = preferences.getString("remember","")
+        if(checkBox.equals("true"))
+        {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.rememberMe.setOnCheckedChangeListener{ buttonView, isChecked->
+            if(isChecked){
+                val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
+                val editor = preferences.edit()
+                editor.putString("remember","true")
+                editor.apply();
+
+            }
+            else if(!isChecked)
+            {
+                val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
+                val editor = preferences.edit()
+                editor.putString("remember","false")
+                editor.apply();
+
+            }
+
+        }
+
 
         binding.redirectToReg.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -59,6 +93,8 @@ class SignInActivity : AppCompatActivity() {
 
             firebaseAuth.signInWithEmailAndPassword(devEmail, devPassword).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+
+
                     Toast.makeText(this, "DevLogin", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
@@ -69,4 +105,6 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
