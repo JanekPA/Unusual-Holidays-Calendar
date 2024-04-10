@@ -1,43 +1,48 @@
 package com.example.k
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.k.databinding.ActivityCalendarViewBinding
+import com.google.firebase.database.FirebaseDatabase
 
 class CalendarView : AppCompatActivity() {
 
     private lateinit var binding: ActivityCalendarViewBinding
     private lateinit var dateTV: TextView
-    private lateinit var calendarView: CalendarView
+    private lateinit var calendarView: android.widget.CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Konfiguracja UI...
+        dateTV = binding.idTVDate
+        calendarView = binding.calendarView
+
+        // Inicjalizacja Firebase Database
+        val database = FirebaseDatabase.getInstance()
+        val holidaysRef = database.getReference("HolidayNames")
+
+        val addHolidayButton: Button = findViewById(R.id.addHolidayButton)
+        addHolidayButton.setOnClickListener {
+            val intent = Intent(this, AddHolidayActivity::class.java)
+            startActivity(intent)
         }
 
-        dateTV = findViewById(R.id.idTVDate)
-        calendarView = findViewById(R.id.calendarView)
-
-
-        calendarView
-            .setOnDateChangeListener(
-                OnDateChangeListener { view, year, month, dayOfMonth ->
-
-                    val Date = (dayOfMonth.toString() + "-"
-                            + (month + 1) + "-" + year)
-
-                    dateTV.setText(Date)
-                })
-
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val dateKey = "$dayOfMonth-${month + 1}-$year"
+            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
+                if (dataSnapshot.exists()) {
+                    val holidayName = dataSnapshot.getValue(String::class.java)
+                    dateTV.text = "$dateKey, Holiday: $holidayName"
+                } else {
+                    dateTV.text = dateKey
+                }
+            }
+        }
     }
 }
