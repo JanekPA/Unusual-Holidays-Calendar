@@ -20,10 +20,27 @@ class AddHolidayActivity : AppCompatActivity() {
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
         val saveButton: Button = findViewById(R.id.saveButton)
 
+         fun isValidInput(date: String, holidayName: String): Boolean {
+            // Wyrażenie regularne akceptuje dni od 1 do 31, miesiące od 1 do 12, i rok jako cztery cyfry
+            val datePattern = "\\b([1-9]|[12][0-9]|3[01])-([1-9]|1[012])-(\\d{4})\\b"
+            if (!date.matches(datePattern.toRegex())) {
+                Toast.makeText(this, "Date must be in D-M-YYYY format!", Toast.LENGTH_LONG).show()
+                return false
+            }
+
+            if (holidayName.isEmpty()) {
+                Toast.makeText(this, "Holiday name cannot be empty!", Toast.LENGTH_LONG).show()
+                return false
+            }
+
+            return true
+        }
+
         saveButton.setOnClickListener {
-            val date = dateEditText.text.toString()
-            val holidayName = holidayNameEditText.text.toString()
-            if (date.isNotEmpty() && holidayName.isNotEmpty()) {
+            val date = dateEditText.text.toString().trim()
+            val holidayName = holidayNameEditText.text.toString().trim()
+
+            if (isValidInput(date, holidayName)) {
                 val database = FirebaseDatabase.getInstance()
                 val holidaysRef = database.getReference("HolidayNames")
                 holidaysRef.child(date).setValue(holidayName).addOnCompleteListener {

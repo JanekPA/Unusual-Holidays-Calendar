@@ -10,12 +10,14 @@
         android:id="@+id/idTVDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:padding="8dp"
         android:text="Current Date"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/Lime"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -24,17 +26,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/idTVDate"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/idHolidayView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Current Holiday"
+        android:textAlignment="center"
+        android:textColor="@color/Lime"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/addHolidayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/calendarView"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="85dp"
-        android:layout_marginEnd="152dp"
+        android:layout_below="@id/idHolidayView"
+        android:drawableLeft="@drawable/baseline_add_task_24"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
         android:text="Add holiday" />
 
 </RelativeLayout>

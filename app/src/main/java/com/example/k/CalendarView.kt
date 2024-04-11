@@ -12,6 +12,7 @@ class CalendarView : AppCompatActivity() {
 
     private lateinit var binding: ActivityCalendarViewBinding
     private lateinit var dateTV: TextView
+    private lateinit var holidayView: TextView
     private lateinit var calendarView: android.widget.CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +22,7 @@ class CalendarView : AppCompatActivity() {
 
         // Konfiguracja UI...
         dateTV = binding.idTVDate
+        holidayView=binding.idHolidayView
         calendarView = binding.calendarView
 
         // Inicjalizacja Firebase Database
@@ -38,9 +40,11 @@ class CalendarView : AppCompatActivity() {
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
                     val holidayName = dataSnapshot.getValue(String::class.java)
-                    dateTV.text = "$dateKey, Holiday: $holidayName"
+                    dateTV.text = dateKey
+                    holidayView.text = "$holidayName"
                 } else {
                     dateTV.text = dateKey
+                    holidayView.text = "No holiday"
                 }
             }
         }
