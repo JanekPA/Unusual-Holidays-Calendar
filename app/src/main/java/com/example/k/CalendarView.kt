@@ -20,12 +20,10 @@ class CalendarView : AppCompatActivity() {
         binding = ActivityCalendarViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Konfiguracja UI...
         dateTV = binding.idTVDate
         holidayView=binding.idHolidayView
         calendarView = binding.calendarView
 
-        // Inicjalizacja Firebase Database
         val database = FirebaseDatabase.getInstance()
         val holidaysRef = database.getReference("HolidayNames")
 
@@ -35,15 +33,18 @@ class CalendarView : AppCompatActivity() {
             startActivity(intent)
         }
 
+        fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val dateKey = "$dayOfMonth-${month + 1}-$year"
+            val dateKey = "${dayOfMonth.pad(2)}-${(month + 1).pad(2)}"
+            val fullDate = "$dateKey-$year"
+
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
                     val holidayName = dataSnapshot.getValue(String::class.java)
-                    dateTV.text = dateKey
-                    holidayView.text = "$holidayName"
+                    dateTV.text = fullDate
+                    holidayView.text = holidayName ?: "Holiday but no name found"
                 } else {
-                    dateTV.text = dateKey
+                    dateTV.text = fullDate
                     holidayView.text = "No holiday"
                 }
             }

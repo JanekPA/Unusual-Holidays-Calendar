@@ -20,11 +20,10 @@ class AddHolidayActivity : AppCompatActivity() {
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
         val saveButton: Button = findViewById(R.id.saveButton)
 
-         fun isValidInput(date: String, holidayName: String): Boolean {
-            // Wyrażenie regularne akceptuje dni od 1 do 31, miesiące od 1 do 12, i rok jako cztery cyfry
-            val datePattern = "\\b([1-9]|[12][0-9]|3[01])-([1-9]|1[012])-(\\d{4})\\b"
+        fun isValidInput(date: String, holidayName: String): Boolean {
+            val datePattern = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])\\b"
             if (!date.matches(datePattern.toRegex())) {
-                Toast.makeText(this, "Date must be in D-M-YYYY format!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Date must be in DD-MM format!", Toast.LENGTH_LONG).show()
                 return false
             }
 
