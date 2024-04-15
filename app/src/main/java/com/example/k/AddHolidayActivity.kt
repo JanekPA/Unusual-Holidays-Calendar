@@ -45,6 +45,7 @@ class AddHolidayActivity : AppCompatActivity() {
                 holidaysRef.child(date).setValue(holidayName).addOnCompleteListener {
                     if (it.isSuccessful) {
                         Toast.makeText(this, "Holiday saved!", Toast.LENGTH_SHORT).show()
+                        finish()
                     } else {
                         Toast.makeText(this, "Write error!", Toast.LENGTH_SHORT).show()
                     }
