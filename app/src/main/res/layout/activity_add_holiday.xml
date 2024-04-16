@@ -34,15 +34,21 @@
                 android:textColor="@color/Lime"
                 android:textSize="20dp" />
 
-            <EditText
-                android:id="@+id/dateEditText"
-                android:layout_width="278dp"
-                android:layout_height="52dp"
+            <TextView
+                android:id="@+id/chooseDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:drawablePadding="8dp"
-                android:hint="Date"
-                android:inputType="date"
-                android:drawableLeft="@drawable/baseline_calendar_month_24"/>
+                android:text="Choose the date of your holiday"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
+            <android.widget.CalendarView
+                android:id="@+id/calendarV"
+                android:layout_width="278dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"/>
 
             <EditText
                 android:id="@+id/holidayNameEditText"
@@ -51,8 +57,7 @@
                 android:layout_marginTop="20dp"
                 android:drawablePadding="8dp"
                 android:hint="Holiday name"
-                android:drawableLeft="@drawable/baseline_celebration_24"
-                />
+                android:drawableLeft="@drawable/baseline_celebration_24"/>
 
             <Button
                 android:id="@+id/saveButton"
@@ -63,5 +68,4 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>
