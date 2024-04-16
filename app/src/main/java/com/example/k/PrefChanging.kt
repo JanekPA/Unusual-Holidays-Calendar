@@ -31,6 +31,8 @@ class PrefChanging : AppCompatActivity() {
     private var spinnerActivityListItem : ArrayList<ListItem>? = ArrayList()
     private var selectedHobby : MutableList<ListItem> = mutableListOf()
     private var spinnerHobbyListItem : ArrayList<ListItem>? = ArrayList()
+    private var countryListItem : ArrayList<ListItem>? = ArrayList()
+    private var selectedCountry : MutableList<ListItem> = mutableListOf()
     private var spinnerActivity : Spinner ?= null
     private var spinnerHobby : Spinner ?= null
     private var nameActivity : TextView?= null
@@ -61,6 +63,14 @@ class PrefChanging : AppCompatActivity() {
         }
 
         selectedHobby.clear()
+
+        val countries = resources.getStringArray(R.array.countries)
+        val countryArray = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
+        for (country in countries)
+        {
+            countryListItem?.add(ListItem(country))
+        }
+
 
         val adapter = MultiSelectSpinnerAdapter(this,
             spinnerActivityListItem!!,
@@ -111,9 +121,8 @@ class PrefChanging : AppCompatActivity() {
 
 
 
-        val countries = resources.getStringArray(R.array.countries)
-        val arrayCountries = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
-        binding.ChangecountryAutoComplete.setAdapter(arrayCountries)
+
+        binding.ChangecountryAutoComplete.setAdapter(countryArray)
         binding.activitySpinner.setAdapter(adapter)
         binding.hobbySpinner.setAdapter(adapter2)
 
@@ -127,6 +136,7 @@ class PrefChanging : AppCompatActivity() {
         val country = binding.ChangecountryAutoComplete.text.toString()
         val activity = selectedActivity?.map { it.name  to it.itemId}?.toMap()
         val hobby = selectedHobby.map { it.name to it.itemId }.toMap()
+
 
         val countries = resources.getStringArray(R.array.countries)
 
@@ -148,9 +158,8 @@ class PrefChanging : AppCompatActivity() {
                     )
                 val firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
                 firebaseRef.child(uid).setValue(datas)
-                val countryId = Arrays.asList(*resources.getStringArray(R.array.countries)).indexOf(country) + 1
-                val countryData = PersonalizationActivity.CountryData(country, countryId)
-                firebaseRef.child(uid).child("Country").setValue(countryData)
+                val countryData = countries.indexOf(country) + 1
+                firebaseRef.child(uid).child("Country").child(country).setValue(countryData)
                 firebaseRef.child(uid).child("Activities").setValue(activity)
                 firebaseRef.child(uid).child("Hobbies").setValue(hobby)
                     .addOnCompleteListener {
