@@ -33,15 +33,11 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/editDateEditText"
+            <android.widget.CalendarView
+                android:id="@+id/calendarView"
                 android:layout_width="278dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:hint="Date (DD-MM)"
-                android:inputType="text"
-                android:drawableLeft="@drawable/baseline_calendar_month_24"
-                android:drawablePadding="8dp" />
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"/>
 
             <EditText
                 android:id="@+id/holidayNameEditText"
