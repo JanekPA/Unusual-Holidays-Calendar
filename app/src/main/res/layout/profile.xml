@@ -5,15 +5,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_drawer_layout"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="HardcodedText">
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profilemain"
+        android:id="@+id/profileact"
         android:layout_width="match_parent"
-        android:background="@drawable/empty_back"
         android:layout_height="match_parent"
+        android:background="@drawable/profiletest"
         tools:context=".MainActivity">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/View_Image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="84dp"
+            android:src="@drawable/circle_background"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/username_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/View_Image"
+            app:layout_constraintStart_toStartOf="@+id/View_Image"
+            app:layout_constraintEnd_toEndOf="@+id/View_Image"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/upload_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/upload"
+            app:layout_constraintBottom_toBottomOf="@+id/View_Image"
+            app:layout_constraintEnd_toEndOf="@+id/View_Image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
