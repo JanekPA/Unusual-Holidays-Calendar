@@ -30,11 +30,13 @@
             android:id="@+id/topBar"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:orientation="horizontal"
+            android:layout_marginBottom="40dp"
             android:background="@color/Lime"
-            android:gravity="center_vertical"
+            android:gravity="top"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
@@ -83,7 +85,6 @@
                 android:src="@drawable/bar_empty" />
 
         </LinearLayout>
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
