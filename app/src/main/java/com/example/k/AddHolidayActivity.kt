@@ -64,7 +64,7 @@ class AddHolidayActivity : AppCompatActivity() {
             Toast.makeText(this, "Please select a date!", Toast.LENGTH_LONG).show()
         } else {
             val database = FirebaseDatabase.getInstance()
-            val holidayDetailsRef = database.getReference("HolidaysDetails").child(selectedDate)
+            val holidayDetailsRef = database.getReference("HolidayNames").child(selectedDate)
 
             val holidayDetails = mapOf(
                 "name" to holidayName,

@@ -26,7 +26,7 @@ class CalendarView : AppCompatActivity() {
         calendarView = binding.calendarView
 
         val database = FirebaseDatabase.getInstance()
-        val holidaysDetailsRef = database.getReference("HolidaysDetails")
+        val holidaysRef = database.getReference("HolidayNames")
 
         val addHolidayButton: Button = findViewById(R.id.addHolidayButton)
         addHolidayButton.setOnClickListener {
@@ -36,30 +36,32 @@ class CalendarView : AppCompatActivity() {
         val editHolidayButton: Button = findViewById(R.id.editHolidayButton)
         editHolidayButton.setOnClickListener {
             val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
-            holidaysDetailsRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
+            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val details = dataSnapshot.value as Map<String, Any>
-                    val intent = Intent(this, EditHolidayActivity::class.java).apply {
-                        putExtra("date", dateKey)
-                        putExtra("holidayDetails", HashMap(details))
-                    }
+                    val holidayName = dataSnapshot.getValue(String::class.java)
+                    val intent = Intent(this, EditHolidayActivity::class.java)
+                    intent.putExtra("date", dateKey)
+                    intent.putExtra("holidayName", holidayName)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
 
-        fun Int.pad(digits: Int) = toString().padStart(digits, '0')
+        fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val dateKey = "${dayOfMonth.pad(2)}-${(month + 1).pad(2)}"
-            holidaysDetailsRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
+            val fullDate = "$dateKey-$year"
+
+            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val details = dataSnapshot.value as Map<String, String>
-                    dateTV.text = "$dateKey-$year"
-                    holidayView.text = details["name"] ?: "Holiday but no name found"
+                    val holidayName = dataSnapshot.getValue(String::class.java)
+                    dateTV.text = fullDate
+                    holidayView.text = holidayName ?: "Holiday but no name found"
                 } else {
-                    dateTV.text = "$dateKey-$year"
+                    dateTV.text = fullDate
                     holidayView.text = "No holiday"
                 }
             }
