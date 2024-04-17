@@ -157,9 +157,9 @@ class PersonalizationActivity : AppCompatActivity() {
                 )
                 val firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
                 firebaseRef.child(uid).setValue(datas)
-                val countryId = Arrays.asList(*resources.getStringArray(R.array.countries)).indexOf(country) + 1
-                val countryData = CountryData(country, countryId)
-                    firebaseRef.child(uid).child("Country").setValue(countryData)
+
+                val countryData = "${countries.indexOf(country) + 1}"
+                firebaseRef.child(uid).child("Country").child(country).setValue(countryData)
                     firebaseRef.child(uid).child("Activities").setValue(activity)
                         firebaseRef.child(uid).child("Hobbies").setValue(hobby)
                     .addOnCompleteListener {
@@ -176,6 +176,4 @@ class PersonalizationActivity : AppCompatActivity() {
         }
     }
 
-    data class CountryData(val name: String, val id: Int)
-    {}
 }

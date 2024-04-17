@@ -16,6 +16,11 @@
         android:theme="@style/Theme.K"
         tools:targetApi="31">
         <activity
+            android:name=".EditHolidayActivity"
+            android:exported="false"
+            android:label="@string/title_activity_edit_holiday"
+            android:theme="@style/Theme.K" />
+        <activity
             android:name=".AddHolidayActivity"
             android:exported="false"
             android:label="@string/title_activity_add_holiday"

@@ -54,4 +54,14 @@
         android:layout_marginTop="80dp"
         android:text="Add holiday" />
 
+    <Button
+        android:id="@+id/editHolidayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addHolidayButton"
+        android:drawableLeft="@drawable/baseline_date_range_24"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Edit Holiday" />
+
 </RelativeLayout>
