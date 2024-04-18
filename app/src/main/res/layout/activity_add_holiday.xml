@@ -1,78 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/WhiteLime"
-    android:padding="16dp">
+    tools:context=".AddHolidayActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="36dp"
-        app:cardCornerRadius="36dp"
-        app:cardElevation="20dp">
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="278dp"
-                android:layout_height="wrap_content"
-                android:text="Add a new holiday!"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginTop="20dp"/>
-
-            <CalendarView
+            <android.widget.CalendarView
                 android:id="@+id/calendarV"
-                android:layout_width="278dp"
-                android:layout_height="300dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
 
             <EditText
                 android:id="@+id/holidayNameEditText"
-                android:layout_width="278dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:hint="Holiday Name"
-                android:inputType="text"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Enter holiday name" />
 
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
-                android:layout_width="278dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:hint="Select Country"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Select a country" />
 
-            <Spinner
-                android:id="@+id/hobbySpinner"
-                android:layout_width="278dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:entries="@array/hobbys" />
+            <Button
+                android:id="@+id/hobbiesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Hobbies"
+                android:layout_marginTop="8dp" />
 
-            <Spinner
-                android:id="@+id/activitySpinner"
-                android:layout_width="278dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:entries="@array/activities" />
+            <Button
+                android:id="@+id/activitiesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Activities"
+                android:layout_marginTop="8dp" />
 
             <Button
                 android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginTop="30dp"
-                android:text="Save Holiday"
-                android:textSize="16sp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
