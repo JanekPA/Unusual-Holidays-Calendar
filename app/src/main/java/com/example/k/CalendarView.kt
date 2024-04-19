@@ -57,13 +57,15 @@ class CalendarView : AppCompatActivity() {
 
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val holidayName = dataSnapshot.getValue(String::class.java)
+                    val holidayName = dataSnapshot.child("name").getValue(String::class.java)
                     dateTV.text = fullDate
                     holidayView.text = holidayName ?: "Holiday but no name found"
                 } else {
                     dateTV.text = fullDate
                     holidayView.text = "No holiday"
                 }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
             }
         }
     }
