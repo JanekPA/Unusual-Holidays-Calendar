@@ -52,14 +52,26 @@ class CalendarView : AppCompatActivity() {
 
         fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val dateKey = "${dayOfMonth.pad(2)}-${(month + 1).pad(2)}"
+            val dateKey = "${dayOfMonth.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}"
             val fullDate = "$dateKey-$year"
-
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val holidayName = dataSnapshot.child("name").getValue(String::class.java)
+                    val holidayNames = mutableListOf<String>()
+
+                    for (holidaySnapshot in dataSnapshot.children) {
+                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                        holidayName?.let { names ->
+                            holidayNames.add(names)
+                        }
+                    }
+
+                    if (holidayNames.isNotEmpty()) {
+                        holidayView.text = holidayNames.joinToString(separator = "\n")
+                    } else {
+                        holidayView.text = "No holidays found"
+                    }
+
                     dateTV.text = fullDate
-                    holidayView.text = holidayName ?: "Holiday but no name found"
                 } else {
                     dateTV.text = fullDate
                     holidayView.text = "No holiday"

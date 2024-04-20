@@ -38,6 +38,7 @@ class AddHolidayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        binding = ActivityAddHolidayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         calendarView = findViewById(R.id.calendarV)
@@ -159,12 +160,12 @@ class AddHolidayActivity : AppCompatActivity() {
             val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(selectedDate)
             val countryData = "${countries.indexOf(country)+1}"
 
-            firebaseRef.child(selectedDate).child("Country").child(country).setValue(countryData)
-            firebaseRef.child(selectedDate).child("Activities").setValue(activity)
-            firebaseRef.child(selectedDate).child("Hobbies").setValue(hobby)
-            firebaseRef.child(selectedDate).child("name").setValue(holidayName)
+            firebaseRef.child(holidayName).child("Country").child(country).setValue(countryData)
+            firebaseRef.child(holidayName).child("Activities").setValue(activity)
+            firebaseRef.child(holidayName).child("Hobbies").setValue(hobby)
+            firebaseRef.child(holidayName).child("name").setValue(holidayName)
                 .addOnCompleteListener {
-                    Toast.makeText(this, "Data changed successfully!", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
                         .show()
                     finish()
                 }

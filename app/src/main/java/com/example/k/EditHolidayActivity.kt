@@ -1,60 +1,186 @@
 package com.example.k
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.k.databinding.ActivityEditHolidayBinding
+import com.example.k.models.ListItem
+import com.example.k.models.MultiSelectSpinnerAdapter
 import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
-
     private lateinit var calendarView: CalendarView
     private lateinit var holidayNameEditText: EditText
     private lateinit var updateButton: Button
-    private fun Int.pad(digits: Int) = toString().padStart(digits, '0')
+    private lateinit var binding: ActivityEditHolidayBinding
+    private var selectedActivity: MutableList<ListItem>? = mutableListOf()
+    private var spinnerActivityListItem: ArrayList<ListItem>? = ArrayList()
+    private var selectedHobby: MutableList<ListItem> = mutableListOf()
+    private var spinnerHobbyListItem: ArrayList<ListItem>? = ArrayList()
+    private var countryListItem: ArrayList<ListItem>? = ArrayList()
+    private var spinnerActivity: Spinner? = null
+    private var spinnerHobby: Spinner? = null
+    private var nameActivity: TextView? = null
+    private var nameHobby: TextView? = null
     private var originalDate: String? = null
+    private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_holiday)
+        enableEdgeToEdge()
+        binding = ActivityEditHolidayBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         calendarView = findViewById(R.id.calendarView)
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
         updateButton = findViewById(R.id.updateButton)
+        spinnerActivity = findViewById(R.id.activitySpinner)
+        spinnerHobby = findViewById(R.id.hobbySpinner)
+        nameActivity = findViewById(R.id.activityHead)
+        nameHobby = findViewById(R.id.hobbyHead)
+
+        val activitiesArray = resources.getStringArray(R.array.activities)
+        for (activity in activitiesArray) {
+            spinnerActivityListItem?.add(ListItem(activity))
+        }
+
+        selectedActivity!!.clear()
+
+        val hobbyArray = resources.getStringArray(R.array.hobbys)
+        for (hobby in hobbyArray) {
+            spinnerHobbyListItem?.add(ListItem(hobby))
+        }
+
+        selectedHobby.clear()
+
+        val countries = resources.getStringArray(R.array.countries)
+        val countryArray =
+            ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries)
+        for (country in countries) {
+            countryListItem?.add(ListItem(country))
+        }
+
+
+        val adapter = MultiSelectSpinnerAdapter(
+            this,
+            spinnerActivityListItem!!,
+            selectedActivity!!
+        )
+
+        spinnerActivity?.adapter = adapter
+
+        adapter.setOnItemSelectedListener(object :
+            MultiSelectSpinnerAdapter.OnItemSelectedListener {
+            override fun onItemSelected(
+                selectedItems: List<ListItem>,
+                pos: Int,
+            ) {
+                nameActivity?.text = "Activity"
+                Log.e("getSelectedItems", selectedItems.toString())
+                Log.e("getSelectedItems", selectedItems.size.toString())
+            }
+        }
+        )
+
+        val adapter2 = MultiSelectSpinnerAdapter(
+            this,
+            spinnerHobbyListItem!!,
+            selectedHobby
+        )
+
+        spinnerHobby?.adapter = adapter2
+
+        adapter2.setOnItemSelectedListener(object :
+            MultiSelectSpinnerAdapter.OnItemSelectedListener {
+            override fun onItemSelected(
+                selectedItems: List<ListItem>,
+                pos: Int,
+            ) {
+                nameHobby?.text = "Hobby"
+                Log.e("getSelectedItems", selectedItems.toString())
+                Log.e("getSelectedItems", selectedItems.size.toString())
+            }
+        }
+        )
 
         originalDate = intent.getStringExtra("date")
         val holidayName = intent.getStringExtra("holidayName")
         holidayNameEditText.setText(holidayName)
 
-        var selectedDate = originalDate
+        selectedDate = ""
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            selectedDate = "${dayOfMonth.pad(2)}-${(month + 1).pad(2)}"
+            selectedDate = "${dayOfMonth.toString().padStart(2, '0')}-${
+                (month + 1).toString().padStart(2, '0')
+            }"
         }
 
-        updateButton.setOnClickListener {
-            val newHolidayName = holidayNameEditText.text.toString().trim()
+        binding.countryAutoComplete.setAdapter(countryArray)
+        binding.activitySpinner.setAdapter(adapter)
+        binding.hobbySpinner.setAdapter(adapter2)
 
-            if (newHolidayName.isEmpty()) {
+        binding.updateButton.setOnClickListener {
+            updateData()
+        }
+
+    }
+
+    private fun updateData() {
+        val country = binding.countryAutoComplete.text.toString()
+        val activity = selectedActivity?.map { it.name to it.itemId }?.toMap()
+        val hobby = selectedHobby.map { it.name to it.itemId }.toMap()
+
+        val countries = resources.getStringArray(R.array.countries)
+
+        val newHolidayName = holidayNameEditText.text.toString().trim()
+
+        if (newHolidayName.isEmpty() || selectedDate.isEmpty() || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
+            if (newHolidayName.isEmpty())
                 Toast.makeText(this, "Holiday name cannot be empty!", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
+            if (selectedDate.isEmpty())
+                Toast.makeText(this, "Please select a date!", Toast.LENGTH_LONG).show()
+            if (country.isEmpty()) binding.countryAutoComplete.error = "Choose a country!"
+            if (activity.isNullOrEmpty()) Toast.makeText(
+                this,
+                "Choose an activity!",
+                Toast.LENGTH_SHORT
+            ).show()
+            if (hobby.isNullOrEmpty()) Toast.makeText(
+                this,
+                "Choose a hobby!",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else if (!countries.contains(country)) {
+            binding.countryAutoComplete.error = "No country specified in the database!"
 
-            val database = FirebaseDatabase.getInstance()
-            val holidaysRef = database.getReference("HolidayNames")
-
+        } else {
+            val firebaseRef =
+                FirebaseDatabase.getInstance().getReference("HolidayNames").child(selectedDate)
+            val countryData = "${countries.indexOf(country) + 1}"
             originalDate?.let {
-                holidaysRef.child(it).removeValue().addOnSuccessListener {
-                    holidaysRef.child(selectedDate!!).setValue(newHolidayName).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "Holiday updated successfully!", Toast.LENGTH_SHORT).show()
+                firebaseRef.child(it).removeValue().addOnSuccessListener {
+                    firebaseRef.child(newHolidayName).child("Country").child(country)
+                        .setValue(countryData)
+                    firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
+                    firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
+                    firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
+                        .addOnCompleteListener {
+                            Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
+                                .show()
                             finish()
-                        } else {
-                            Toast.makeText(this, "Update failed!", Toast.LENGTH_SHORT).show()
                         }
-                    }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                 }
             }
         }
