@@ -30,7 +30,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private var spinnerHobby: Spinner? = null
     private var nameActivity: TextView? = null
     private var nameHobby: TextView? = null
-    private var originalDate: String? = null
+    private var dateKey: String? = null
     private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +111,7 @@ class EditHolidayActivity : AppCompatActivity() {
         }
         )
 
-        originalDate = intent.getStringExtra("date")
+        /*originalDate = intent.getStringExtra("date")
         val holidayName = intent.getStringExtra("holidayName")
         holidayNameEditText.setText(holidayName)
 
@@ -121,7 +121,9 @@ class EditHolidayActivity : AppCompatActivity() {
             selectedDate = "${dayOfMonth.toString().padStart(2, '0')}-${
                 (month + 1).toString().padStart(2, '0')
             }"
-        }
+        }*/
+
+        dateKey = intent.getStringExtra("dateKey")
 
         binding.countryAutoComplete.setAdapter(countryArray)
         binding.activitySpinner.setAdapter(adapter)
@@ -142,10 +144,10 @@ class EditHolidayActivity : AppCompatActivity() {
 
         val newHolidayName = holidayNameEditText.text.toString().trim()
 
-        if (newHolidayName.isEmpty() || selectedDate.isEmpty() || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
+        if (newHolidayName.isEmpty() || dateKey==null || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
             if (newHolidayName.isEmpty())
                 Toast.makeText(this, "Holiday name cannot be empty!", Toast.LENGTH_LONG).show()
-            if (selectedDate.isEmpty())
+            if (dateKey==null)
                 Toast.makeText(this, "Please select a date!", Toast.LENGTH_LONG).show()
             if (country.isEmpty()) binding.countryAutoComplete.error = "Choose a country!"
             if (activity.isNullOrEmpty()) Toast.makeText(
@@ -162,11 +164,14 @@ class EditHolidayActivity : AppCompatActivity() {
             binding.countryAutoComplete.error = "No country specified in the database!"
 
         } else {
-            val firebaseRef =
-                FirebaseDatabase.getInstance().getReference("HolidayNames").child(selectedDate)
-            val countryData = "${countries.indexOf(country) + 1}"
-            originalDate?.let {
-                firebaseRef.child(it).removeValue().addOnSuccessListener {
+            val database = FirebaseDatabase.getInstance()
+            val holidaysRef = database.getReference("HolidayNames")
+
+            val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
+                dateKey.toString()
+            )
+            val countryData = countries.indexOf(country) + 1
+
                     firebaseRef.child(newHolidayName).child("Country").child(country)
                         .setValue(countryData)
                     firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
@@ -181,8 +186,8 @@ class EditHolidayActivity : AppCompatActivity() {
                             Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
                                 .show()
                         }
-                }
-            }
+
+
         }
     }
 }
