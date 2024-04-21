@@ -39,17 +39,26 @@ class CalendarView : AppCompatActivity() {
             val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val holidayName = dataSnapshot.child("name").getValue(String::class.java) // Odczytaj nazwę święta
-                    val intent = Intent(this, EditHolidayActivity::class.java)
-                    intent.putExtra("dateKey", dateKey) // Przekazanie klucza daty do EditHolidayActivity
-                    holidayName?.let { intent.putExtra("holidayName", it) } // Przekazanie nazwy święta do EditHolidayActivity
-                    startActivity(intent)
-                } else {
+                    dataSnapshot.children.forEach { holidaySnapshot ->
+                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                        if (holidayName != null) { // Jeżeli nazwa święta istnieje
+                            val intent = Intent(this, EditHolidayActivity::class.java)
+                            intent.putExtra("dateKey", dateKey) // Przekazanie klucza daty do EditHolidayActivity
+                            intent.putExtra("holidayName", holidayName) // Przekazanie nazwy święta do EditHolidayActivity
+                            startActivity(intent)
+                            return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
+                        }
+                    }
+                    // Jeśli pętla się zakończyła i nie znalazła święta, to wyświetla komunikat
                     Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Nie znaleziono danych dla tego dnia.", Toast.LENGTH_LONG).show()
                 }
+            }.addOnFailureListener {
+                // Obsługa błędu pobierania danych, np. brak połączenia internetowego
+                Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
             }
         }
-
         fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val dateKey = "${dayOfMonth.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}"
