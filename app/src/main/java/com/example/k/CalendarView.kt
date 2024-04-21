@@ -39,8 +39,10 @@ class CalendarView : AppCompatActivity() {
             val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
+                    val holidayName = dataSnapshot.child("name").getValue(String::class.java) // Odczytaj nazwę święta
                     val intent = Intent(this, EditHolidayActivity::class.java)
                     intent.putExtra("dateKey", dateKey) // Przekazanie klucza daty do EditHolidayActivity
+                    holidayName?.let { intent.putExtra("holidayName", it) } // Przekazanie nazwy święta do EditHolidayActivity
                     startActivity(intent)
                 } else {
                     Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()

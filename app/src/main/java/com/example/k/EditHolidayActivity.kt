@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
@@ -17,7 +16,6 @@ import com.example.k.models.MultiSelectSpinnerAdapter
 import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
-    private lateinit var calendarView: CalendarView
     private lateinit var holidayNameEditText: EditText
     private lateinit var updateButton: Button
     private lateinit var binding: ActivityEditHolidayBinding
@@ -31,6 +29,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private var nameActivity: TextView? = null
     private var nameHobby: TextView? = null
     private var dateKey: String? = null
+    private var holidayName: String? = null
     private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class EditHolidayActivity : AppCompatActivity() {
         binding = ActivityEditHolidayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        calendarView = findViewById(R.id.calendarView)
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
         updateButton = findViewById(R.id.updateButton)
         spinnerActivity = findViewById(R.id.activitySpinner)
@@ -124,6 +122,8 @@ class EditHolidayActivity : AppCompatActivity() {
         }*/
 
         dateKey = intent.getStringExtra("dateKey")
+        holidayName = intent.getStringExtra("holidayName")
+        holidayNameEditText.setText(holidayName)
 
         binding.countryAutoComplete.setAdapter(countryArray)
         binding.activitySpinner.setAdapter(adapter)
@@ -143,6 +143,7 @@ class EditHolidayActivity : AppCompatActivity() {
         val countries = resources.getStringArray(R.array.countries)
 
         val newHolidayName = holidayNameEditText.text.toString().trim()
+        val oldHolidayName = holidayName.toString()
 
         if (newHolidayName.isEmpty() || dateKey==null || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
             if (newHolidayName.isEmpty())
@@ -171,14 +172,17 @@ class EditHolidayActivity : AppCompatActivity() {
                 dateKey.toString()
             )
             val countryData = countries.indexOf(country) + 1
-
+            if (oldHolidayName != null) {
+                // Najpierw usuń starą gałąź święta, jeśli nazwa została zmieniona
+                firebaseRef.child(oldHolidayName).removeValue().addOnCompleteListener {
+                    // Dopiero po usunięciu dodaj nowe dane
                     firebaseRef.child(newHolidayName).child("Country").child(country)
                         .setValue(countryData)
                     firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
                     firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
                     firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
                         .addOnCompleteListener {
-                            Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
+                            Toast.makeText(this, "Data updated successfully!", Toast.LENGTH_SHORT)
                                 .show()
                             finish()
                         }
@@ -186,8 +190,8 @@ class EditHolidayActivity : AppCompatActivity() {
                             Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
                                 .show()
                         }
-
-
+                }
+            }
         }
     }
 }

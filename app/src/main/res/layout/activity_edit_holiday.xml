@@ -23,25 +23,21 @@
             android:gravity="center"
             android:padding="24dp">
 
-            <android.widget.CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+
 
             <EditText
                 android:id="@+id/holidayNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Enter holiday name" />
+                android:hint="Enter a new holiday name" />
 
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Select a country" />
+                android:hint="Select a new country" />
 
             <Spinner
                 android:id="@+id/activitySpinner"
