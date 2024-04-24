@@ -26,6 +26,11 @@
             android:label="@string/title_activity_add_holiday"
             android:theme="@style/Theme.K" />
         <activity
+            android:name=".Community"
+            android:exported="false"
+            android:label="@string/title_activity_add_holiday"
+            android:theme="@style/Theme.K" />
+        <activity
             android:name=".PrefChanging"
             android:exported="false" />
         <activity

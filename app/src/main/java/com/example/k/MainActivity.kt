@@ -12,7 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.k.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-
 import android.widget.ImageView
 import com.google.firebase.auth.FirebaseUser
 import com.bumptech.glide.Glide
@@ -46,8 +45,6 @@ class MainActivity : AppCompatActivity() {
         val headerView = navigationView.getHeaderView(0)
 
         profileImageView = headerView.findViewById(R.id.View_Image2)
-
-
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
@@ -92,7 +89,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CalendarView::class.java)
             startActivity(intent)
         }
-
+        binding.AddButton?.setOnClickListener {
+            val intent = Intent(this, AddHolidayActivity::class.java)
+            startActivity(intent)
+        }
+        binding.communityMain?.setOnClickListener {
+            val intent = Intent(this, Community::class.java)
+            startActivity(intent)
+        }
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
 
