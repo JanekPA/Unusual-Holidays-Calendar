@@ -20,49 +20,73 @@ class CalendarView : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         dateTV = binding.idTVDate
-        holidayView=binding.idHolidayView
+        holidayView = binding.idHolidayView
         calendarView = binding.calendarView
 
-
+        val database = FirebaseDatabase.getInstance()
+        val holidaysRef = database.getReference("HolidayNames")
 
         val addHolidayButton: Button = findViewById(R.id.addHolidayButton)
         addHolidayButton.setOnClickListener {
-            val intent = Intent(this, AddHolidayActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, AddHolidayActivity::class.java))
         }
+
 
         val editHolidayButton: Button = findViewById(R.id.editHolidayButton)
         editHolidayButton.setOnClickListener {
             val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
-            val holidaysRef = FirebaseDatabase.getInstance().getReference("HolidayNames")
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val holidayName = dataSnapshot.getValue(String::class.java)
-                    val intent = Intent(this, EditHolidayActivity::class.java)
-                    intent.putExtra("date", dateKey)
-                    intent.putExtra("holidayName", holidayName)
-                    startActivity(intent)
-                } else {
+                    dataSnapshot.children.forEach { holidaySnapshot ->
+                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                        if (holidayName != null) { // Jeżeli nazwa święta istnieje
+                            val intent = Intent(this, EditHolidayActivity::class.java)
+                            intent.putExtra("dateKey", dateKey) // Przekazanie klucza daty do EditHolidayActivity
+                            intent.putExtra("holidayName", holidayName) // Przekazanie nazwy święta do EditHolidayActivity
+                            startActivity(intent)
+                            return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
+                        }
+                    }
+                    // Jeśli pętla się zakończyła i nie znalazła święta, to wyświetla komunikat
                     Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Nie znaleziono danych dla tego dnia.", Toast.LENGTH_LONG).show()
                 }
+            }.addOnFailureListener {
+                // Obsługa błędu pobierania danych, np. brak połączenia internetowego
+                Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
             }
         }
-
         fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val dateKey = "${dayOfMonth.pad(2)}-${(month + 1).pad(2)}"
+            val dateKey = "${dayOfMonth.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}"
             val fullDate = "$dateKey-$year"
-            val holidaysRef = FirebaseDatabase.getInstance().getReference("HolidayNames")
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
-                    val holidayName = dataSnapshot.getValue(String::class.java)
+                    val holidayNames = mutableListOf<String>()
+
+                    for (holidaySnapshot in dataSnapshot.children) {
+                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                        holidayName?.let { names ->
+                            holidayNames.add(names)
+                        }
+                    }
+
+                    if (holidayNames.isNotEmpty()) {
+                        holidayView.text = holidayNames.joinToString(separator = "\n")
+                    } else {
+                        holidayView.text = "No holidays found"
+                    }
+
                     dateTV.text = fullDate
-                    holidayView.text = holidayName ?: "Holiday but no name found"
                 } else {
                     dateTV.text = fullDate
                     holidayView.text = "No holiday"
                 }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
             }
         }
     }
