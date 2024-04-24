@@ -11,8 +11,84 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/settingsmain"
         android:layout_width="match_parent"
-        android:background="@drawable/empty_back"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
+
+        <Button
+            android:id="@+id/Account_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/main_account_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/BarOptions"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/Lime"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/CalendarV_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_calendar" />
+
+            <ImageButton
+                android:id="@+id/Community_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/community" />
+
+            <ImageButton
+                android:id="@+id/Add_button_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_add" />
+
+            <ImageButton
+                android:id="@+id/button4_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+            <ImageButton
+                android:id="@+id/button5_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/sidebar" />
 </androidx.drawerlayout.widget.DrawerLayout>

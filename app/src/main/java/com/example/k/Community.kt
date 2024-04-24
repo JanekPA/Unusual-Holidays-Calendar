@@ -9,24 +9,24 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.example.k.databinding.CommunityBinding
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
-import com.example.k.databinding.SettingsBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.auth.FirebaseAuth
 
-class Settings : AppCompatActivity() {
-    private lateinit var binding: SettingsBinding
+class Community : AppCompatActivity() {
+    private lateinit var binding: CommunityBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView: ImageView
     private lateinit var firebaseAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings)
-        binding = SettingsBinding.inflate(layoutInflater)
+        binding = CommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViews()
         drawerLayout = binding.myDrawerLayout
@@ -40,6 +40,7 @@ class Settings : AppCompatActivity() {
         val navigationView: NavigationView = findViewById(R.id.navigation_view)
         val headerView = navigationView.getHeaderView(0)
         profileImageView = headerView.findViewById(R.id.View_Image2)
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
@@ -64,20 +65,25 @@ class Settings : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         loadProfilePicture()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
     private fun setupViews() {
+
         binding.AccountButton?.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-        binding.CalendarVOptions.setOnClickListener {
+        binding.CalendarVCommunity.setOnClickListener {
             val intent = Intent(this, CalendarView::class.java)
             startActivity(intent)
         }
-        binding.AddButtonOptions?.setOnClickListener {
+
+        binding.AddButtonCommunity.setOnClickListener {
             val intent = Intent(this, AddHolidayActivity::class.java)
-            startActivity(intent)
-        }
-        binding.CommunityOptions?.setOnClickListener {
-            val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
         drawerLayout = binding.myDrawerLayout
@@ -87,11 +93,6 @@ class Settings : AppCompatActivity() {
         actionBarDrawerToggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            true
-        } else super.onOptionsItemSelected(item)
     }
     private fun loadProfilePicture() {
         // How is this working? idk trust me bro
@@ -104,7 +105,7 @@ class Settings : AppCompatActivity() {
             val imageRef = profilePicturesRef.child(filename)
 
             imageRef.downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(this@Settings)
+                Glide.with(this@Community)
                     .load(uri)
                     .into(profileImageView)
             }.addOnFailureListener { exception ->

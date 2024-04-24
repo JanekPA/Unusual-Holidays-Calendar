@@ -7,14 +7,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    tools:ignore="HardcodedText">
+    tools:ignore="HardcodedText"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profileact"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/profiletest"
         tools:context=".MainActivity">
+
+        <TextView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="360dp"
+            android:layout_marginBottom="324dp"
+            android:background="@drawable/gradient_background"
+            android:gravity="center"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Account_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/main_account_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/View_Image"
@@ -29,18 +51,136 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/username_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Username"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/View_Image"
-            app:layout_constraintStart_toStartOf="@+id/View_Image"
             app:layout_constraintEnd_toEndOf="@+id/View_Image"
+            app:layout_constraintStart_toStartOf="@+id/View_Image"
+            app:layout_constraintTop_toBottomOf="@+id/View_Image" />
+
+
+        <LinearLayout
+            android:id="@+id/BarProfile"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/Lime"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/CalendarV_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_calendar" />
+
+            <ImageButton
+                android:id="@+id/community_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/community" />
+
+            <ImageButton
+                android:id="@+id/Add_button_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_add" />
+
+            <ImageButton
+                android:id="@+id/button4_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+            <ImageButton
+                android:id="@+id/button5_profile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/info_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            />
+            android:gravity="center"
+            android:text="Default Information"
+            app:layout_constraintBottom_toTopOf="@+id/BarProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Bar_P" />
+
+
+
+        <LinearLayout
+            android:id="@+id/Bar_P"
+            android:layout_width="0dp"
+            android:layout_marginTop="40dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:background="@drawable/bar_p_background"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username_text">
+
+            <ImageButton
+                android:id="@+id/B1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+            <ImageButton
+                android:id="@+id/B2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+            <ImageButton
+                android:id="@+id/B3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bar_empty" />
+
+        </LinearLayout>
+
+
         <Button
             android:id="@+id/upload_image"
             android:layout_width="50dp"
@@ -52,4 +192,11 @@
             app:layout_constraintEnd_toEndOf="@+id/View_Image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/sidebar" />
 </androidx.drawerlayout.widget.DrawerLayout>
