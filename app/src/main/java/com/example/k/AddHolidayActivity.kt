@@ -134,8 +134,8 @@ class AddHolidayActivity : AppCompatActivity() {
 
     private fun saveHolidayDetails() {
         val country = binding.countryAutoComplete.text.toString()
-        val activity = selectedActivity?.map { it.name  to it.itemId % 15}?.toMap()
-        val hobby = selectedHobby.map { it.name to it.itemId % 15 }.toMap()
+        val activity = selectedActivity?.map { it.name  to (it.itemId % 15)+1}?.toMap()
+        val hobby = selectedHobby.map { it.name to (it.itemId % 15)+1 }.toMap()
 
         val countries = resources.getStringArray(R.array.countries)
 
