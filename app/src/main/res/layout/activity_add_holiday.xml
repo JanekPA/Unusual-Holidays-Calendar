@@ -34,14 +34,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Enter holiday name" />
+                android:hint="Enter holiday name"
+                android:drawableLeft="@drawable/baseline_celeb"/>
 
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Select a country" />
+                android:hint="Select a country"
+                android:drawableLeft="@drawable/baseline_location"/>
 
             <Spinner
                 android:id="@+id/activitySpinner"
@@ -65,11 +67,14 @@
 
             <Button
                 android:id="@+id/saveButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
                 android:text="Save"
+                android:drawableLeft="@drawable/baseline_event_available_24"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

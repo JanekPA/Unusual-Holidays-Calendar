@@ -30,14 +30,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Enter a new holiday name" />
+                android:hint="Enter a new holiday name"
+                android:drawableLeft="@drawable/baseline_celeb"/>
 
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Select a new country" />
+                android:hint="Select a new country"
+                android:drawableLeft="@drawable/baseline_location"/>
 
             <Spinner
                 android:id="@+id/activitySpinner"
@@ -64,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
+                android:drawableLeft="@drawable/baseline_event_available_24"
                 android:text="Update"
                 android:textSize="16sp" />
 

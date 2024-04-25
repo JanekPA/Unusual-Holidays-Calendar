@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/idHolidayView"
-        android:drawableLeft="@drawable/baseline_add_task_24"
+        android:drawableLeft="@drawable/baseline_add_holiday"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:text="Add holiday" />
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/addHolidayButton"
-        android:drawableLeft="@drawable/baseline_date_range_24"
+        android:drawableLeft="@drawable/baseline_edit_calendar_24"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Edit Holiday" />

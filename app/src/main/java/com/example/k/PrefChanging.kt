@@ -3,14 +3,12 @@ package com.example.k
 
 import android.content.Context
 import android.content.Intent
-
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import android.widget.Spinner
 import android.widget.TextView
-
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,10 +18,8 @@ import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
 import com.example.k.models.PersonalizationData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import java.util.Arrays
 
 class PrefChanging : AppCompatActivity() {
     private lateinit var binding: ActivityPrefChangingBinding
@@ -66,10 +62,7 @@ class PrefChanging : AppCompatActivity() {
 
         val countries = resources.getStringArray(R.array.countries)
         val countryArray = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
-        for (country in countries)
-        {
-            countryListItem?.add(ListItem(country))
-        }
+
 
 
         val adapter = MultiSelectSpinnerAdapter(this,
@@ -134,8 +127,8 @@ class PrefChanging : AppCompatActivity() {
 
     private fun updateData() {
         val country = binding.ChangecountryAutoComplete.text.toString()
-        val activity = selectedActivity?.map { it.name  to it.itemId}?.toMap()
-        val hobby = selectedHobby.map { it.name to it.itemId }.toMap()
+        val activity = selectedActivity?.map { it.name  to it.itemId % 15}?.toMap()
+        val hobby = selectedHobby.map { it.name to it.itemId % 15}.toMap()
 
 
         val countries = resources.getStringArray(R.array.countries)
