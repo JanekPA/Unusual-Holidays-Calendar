@@ -16,14 +16,19 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
-import android.view.View
+import android.widget.LinearLayout
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+class HolidayApproval : AppCompatActivity() {
 
-class Settings : AppCompatActivity() {
     private lateinit var binding: SettingsBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView: ImageView
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var holidaysLayout: LinearLayout
+    private lateinit var firebaseRef: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
@@ -63,15 +68,8 @@ class Settings : AppCompatActivity() {
             true
         }
         firebaseAuth = FirebaseAuth.getInstance()
+        firebaseRef = FirebaseDatabase.getInstance().getReference("Lobby")
         loadProfilePicture()
-
-        // Check for specific email
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null && currentUser.email == "emailf@gmail.com") {
-            binding.AdminButton.visibility = View.VISIBLE
-        } else {
-            binding.AdminButton.visibility = View.GONE
-        }
     }
 
     private fun setupViews() {
@@ -90,10 +88,7 @@ class Settings : AppCompatActivity() {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
-        binding.AdminButton?.setOnClickListener {
-            val intent = Intent(this, Community::class.java)
-            startActivity(intent)
-        }
+
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
 
@@ -120,7 +115,7 @@ class Settings : AppCompatActivity() {
             val imageRef = profilePicturesRef.child(filename)
 
             imageRef.downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(this@Settings)
+                Glide.with(this@HolidayApproval)
                     .load(uri)
                     .into(profileImageView)
             }.addOnFailureListener { exception ->

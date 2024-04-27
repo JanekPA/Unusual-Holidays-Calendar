@@ -48,6 +48,9 @@
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity
+            android:name=".HolidayApproval"
+            android:exported="false" />
+        <activity
             android:name=".Profile"
             android:exported="false" />
         <activity

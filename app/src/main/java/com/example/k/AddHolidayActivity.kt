@@ -157,7 +157,7 @@ class AddHolidayActivity : AppCompatActivity() {
         } else if (!countries.contains(country)) {
             binding.countryAutoComplete.error = "No country specified in the database!"
         } else {
-            val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(selectedDate)
+            val firebaseRef = FirebaseDatabase.getInstance().getReference("Lobby").child(selectedDate)
             val countryData = countries.indexOf(country)+1
 
             firebaseRef.child(holidayName).child("Country").child(country).setValue(countryData)
