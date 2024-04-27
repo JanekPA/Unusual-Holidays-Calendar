@@ -14,6 +14,8 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+
+
         <Button
             android:id="@+id/Account_button"
             android:layout_width="50dp"
@@ -24,20 +26,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/AdminButton"
+        <LinearLayout
+            android:id="@+id/holidayNamesLayout"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="72dp"
-            android:drawableRight="@drawable/baseline_edit_calendar_24"
-            android:paddingEnd="16dp"
-            android:text="Approve Holidays"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="450dp"
+            android:layout_marginEnd="8dp"
+            />
 
         <LinearLayout
             android:id="@+id/BarOptions"
