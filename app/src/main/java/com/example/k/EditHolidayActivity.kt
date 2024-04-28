@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -183,6 +184,7 @@ class EditHolidayActivity : AppCompatActivity() {
                             Toast.makeText(this, "Data updated successfully!", Toast.LENGTH_SHORT)
                                 .show()
                             finish()
+                            startActivity(Intent(this@EditHolidayActivity, MainActivity::class.java))
                         }
                         .addOnFailureListener { exception ->
                             Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)

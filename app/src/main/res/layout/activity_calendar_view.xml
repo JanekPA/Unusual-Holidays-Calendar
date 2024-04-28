@@ -55,7 +55,7 @@
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="Current Holiday"
+                android:text="Current Holidays"
                 android:textAlignment="center"
                 android:textColor="@color/Lime"
                 android:textSize="20sp"

@@ -33,17 +33,25 @@
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"/>
 
-    <TextView
-        android:id="@+id/MainWindow"
-        android:layout_width="match_parent"
-        android:layout_height="265dp"
-        android:layout_below="@id/holidayNameTextView"
-        android:background="@drawable/border"
-        android:padding="16dp"
-        android:textAlignment="textStart"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/holidayNameTextView" />
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/holidayNameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/MainWindow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:scrollbars="vertical">
+        </TextView>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

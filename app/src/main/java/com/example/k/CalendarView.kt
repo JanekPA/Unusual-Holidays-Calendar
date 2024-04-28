@@ -3,23 +3,23 @@ package com.example.k
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.k.databinding.ActivityCalendarViewBinding
-import com.google.firebase.database.FirebaseDatabase
-import android.view.MenuItem
-import android.widget.ImageView
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
+import com.example.k.databinding.ActivityCalendarViewBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -85,33 +85,7 @@ class CalendarView : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance()
         val holidaysRef = database.getReference("HolidayNames")
 
-//        val addHolidayButton: Button = findViewById(R.id.addHolidayButton)
-//        addHolidayButton.setOnClickListener {
-//            startActivity(Intent(this, AddHolidayActivity::class.java))
-//        }
-//
-//        val editHolidayButton: Button = findViewById(R.id.editHolidayButton)
-//        editHolidayButton.setOnClickListener {
-//            val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
-//            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
-//                if (dataSnapshot.exists()) {
-//                    dataSnapshot.children.forEach { holidaySnapshot ->
-//                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
-//                        if (holidayName != null) { // Jeżeli nazwa święta istnieje
-//                            showHolidayNameDialog(holidayName)
-//                            return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
-//                        }
-//                    }
-//                    // Jeśli pętla się zakończyła i nie znaleziono święta, to wyświetla komunikat
-//                    Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
-//                } else {
-//                    Toast.makeText(this, "Nie znaleziono danych dla tego dnia.", Toast.LENGTH_LONG).show()
-//                }
-//            }.addOnFailureListener {
-//                // Obsługa błędu pobierania danych, np. brak połączenia internetowego
-//                Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
-//            }
-//        }
+
 
         fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
@@ -216,17 +190,58 @@ class CalendarView : AppCompatActivity() {
         finish()
         Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show()
     }
+
+
+    //        val addHolidayButton: Button = findViewById(R.id.addHolidayButton)
+//        addHolidayButton.setOnClickListener {
+//            startActivity(Intent(this, AddHolidayActivity::class.java))
+//        }
+//
+//        val editHolidayButton: Button = findViewById(R.id.editHolidayButton)
+//        editHolidayButton.setOnClickListener {
+//            val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
+//            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
+//                if (dataSnapshot.exists()) {
+//                    dataSnapshot.children.forEach { holidaySnapshot ->
+//                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+//                        if (holidayName != null) { // Jeżeli nazwa święta istnieje
+//                            showHolidayNameDialog(holidayName)
+//                            return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
+//                        }
+//                    }
+//                    // Jeśli pętla się zakończyła i nie znaleziono święta, to wyświetla komunikat
+//                    Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
+//                } else {
+//                    Toast.makeText(this, "Nie znaleziono danych dla tego dnia.", Toast.LENGTH_LONG).show()
+//                }
+//            }.addOnFailureListener {
+//                // Obsługa błędu pobierania danych, np. brak połączenia internetowego
+//                Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
+//            }
+//        }
+
+
     private fun showHolidayNameDialog(holidayName: String) {
         val dialogView = layoutInflater.inflate(R.layout.holiday_dialog, null)
         val holidayNameTextView = dialogView.findViewById<TextView>(R.id.holidayNameTextView)
         holidayNameTextView.text = holidayName
 
+        val database = FirebaseDatabase.getInstance()
+        val holidaysRef = database.getReference("HolidayNames")
+        val fullDate = dateTV.text.toString()
+        val dateKey = fullDate.substring(0, 5)
+
         val editButton = dialogView.findViewById<Button>(R.id.editHoly)
         editButton.setOnClickListener {
-            val intent = Intent(this, EditHolidayActivity::class.java)
-            intent.putExtra("holidayName", holidayName)
-            startActivity(intent)
-            (it.context as? AlertDialog)?.dismiss()
+            holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { holidaySnapshot ->
+                if(holidaySnapshot.exists()) {
+                    val intent = Intent(this, EditHolidayActivity::class.java)
+                    intent.putExtra("dateKey", dateKey)
+                    intent.putExtra("holidayName", holidayName)
+                    startActivity(intent)
+                    (it.context as? AlertDialog)?.dismiss()
+                }
+            }
         }
 
         val builder = AlertDialog.Builder(this)
@@ -236,10 +251,7 @@ class CalendarView : AppCompatActivity() {
 
         dialog.show()
 
-        val database = FirebaseDatabase.getInstance()
-        val holidaysRef = database.getReference("HolidayNames")
-        val fullDate = dateTV.text.toString()
-        val dateKey = fullDate.substring(0, 5)
+
 
         holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
