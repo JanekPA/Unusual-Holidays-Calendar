@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -7,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityCalendarViewBinding
+import com.example.k.models.PersonalizationData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class CalendarView : AppCompatActivity() {
@@ -37,26 +40,53 @@ class CalendarView : AppCompatActivity() {
         val editHolidayButton: Button = findViewById(R.id.editHolidayButton)
         editHolidayButton.setOnClickListener {
             val dateKey = dateTV.text.toString().substring(0, 5) // Odczytaj klucz "DD-MM"
-            holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
-                if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach { holidaySnapshot ->
-                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
-                        if (holidayName != null) { // Jeżeli nazwa święta istnieje
-                            val intent = Intent(this, EditHolidayActivity::class.java)
-                            intent.putExtra("dateKey", dateKey) // Przekazanie klucza daty do EditHolidayActivity
-                            intent.putExtra("holidayName", holidayName) // Przekazanie nazwy święta do EditHolidayActivity
-                            startActivity(intent)
-                            return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
+            val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+            val username = sharedPreferences.getString("nickname", "")
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+                val datas = PersonalizationData(
+                    username,
+                )
+                holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
+                    if (dataSnapshot.exists()) {
+                        dataSnapshot.children.forEach { holidaySnapshot ->
+                            val holidayAutor =
+                                holidaySnapshot.child("nickname").getValue(String::class.java)
+                            val holidayName =
+                                holidaySnapshot.child("name").getValue(String::class.java)
+                            if (holidayName != null && holidayAutor == username.toString()) { // Jeżeli nazwa święta istnieje
+                                val intent = Intent(this, EditHolidayActivity::class.java)
+                                intent.putExtra(
+                                    "dateKey",
+                                    dateKey
+                                ) // Przekazanie klucza daty do EditHolidayActivity
+                                intent.putExtra(
+                                    "holidayName",
+                                    holidayName
+                                ) // Przekazanie nazwy święta do EditHolidayActivity
+                                startActivity(intent)
+                                return@addOnSuccessListener // Wychodzi po znalezieniu pierwszego święta
+                            }
                         }
+                        // Jeśli pętla się zakończyła i nie znalazła święta, to wyświetla komunikat
+                        Toast.makeText(
+                            this,
+                            "W tym dniu nie ma święta do edycji!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Nie znaleziono danych dla tego dnia.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                    // Jeśli pętla się zakończyła i nie znalazła święta, to wyświetla komunikat
-                    Toast.makeText(this, "W tym dniu nie ma święta do edycji!", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, "Nie znaleziono danych dla tego dnia.", Toast.LENGTH_LONG).show()
+                }.addOnFailureListener {
+                    // Obsługa błędu pobierania danych, np. brak połączenia internetowego
+                    Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
                 }
-            }.addOnFailureListener {
-                // Obsługa błędu pobierania danych, np. brak połączenia internetowego
-                Toast.makeText(this, "Nie udało się pobrać danych.", Toast.LENGTH_LONG).show()
             }
         }
         fun Int.pad(digits: Int) = this.toString().padStart(digits, '0')
