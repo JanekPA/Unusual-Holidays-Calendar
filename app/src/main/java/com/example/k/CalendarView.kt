@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.example.k.databinding.ActivityCalendarViewBinding
+import com.example.k.models.PersonalizationData
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -233,14 +235,36 @@ class CalendarView : AppCompatActivity() {
 
         val editButton = dialogView.findViewById<Button>(R.id.editHoly)
         editButton.setOnClickListener {
-            holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { holidaySnapshot ->
-                if(holidaySnapshot.exists()) {
-                    val intent = Intent(this, EditHolidayActivity::class.java)
-                    intent.putExtra("dateKey", dateKey)
-                    intent.putExtra("holidayName", holidayName)
-                    startActivity(intent)
-                    (it.context as? AlertDialog)?.dismiss()
-                }
+            val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+            val username = sharedPreferences.getString("nickname", "")
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+                val datas = PersonalizationData(
+                    username,
+                )
+                holidaysRef.child(dateKey).child(holidayName).get()
+                    .addOnSuccessListener { holidaySnapshot ->
+                        if (holidaySnapshot.exists()) {
+                            val holidayAuthor = holidaySnapshot.child("nickname").getValue(String::class.java)
+                            if(holidayAuthor == username) {
+                                val intent = Intent(this, EditHolidayActivity::class.java)
+                                intent.putExtra("dateKey", dateKey)
+                                intent.putExtra("holidayName", holidayName)
+                                startActivity(intent)
+                                (it.context as? AlertDialog)?.dismiss()
+                            }
+                            else
+                            {
+                                Toast.makeText(
+                                    this,
+                                    "You are not author, you can not modify!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
             }
         }
 
