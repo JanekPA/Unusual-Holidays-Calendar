@@ -1,6 +1,5 @@
 package com.example.k
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityAddHolidayBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
-import com.example.k.models.PersonalizationData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -162,19 +160,17 @@ class AddHolidayActivity : AppCompatActivity() {
             binding.countryAutoComplete.error = "No country specified in the database!"
         } else {
 
-            val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
-            val username = sharedPreferences.getString("nickname", "")
+            //val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+            //val username = sharedPreferences.getString("nickname", "")
             val firebaseAuth = FirebaseAuth.getInstance()
             val firebaseUser = firebaseAuth.currentUser
 
             firebaseUser?.let { user ->
                 val uid = user.uid
-                val datas = PersonalizationData(
-                    username,
-                )
+
                 val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames")
                     .child(selectedDate)
-                firebaseRef.child(holidayName).setValue(datas)
+                firebaseRef.child(holidayName).child("uid").setValue(uid)
                 val countryData = countries.indexOf(country) + 1
 
                 firebaseRef.child(holidayName).child("Country").child(country).setValue(countryData)
