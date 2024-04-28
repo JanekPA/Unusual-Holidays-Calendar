@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityEditHolidayBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
+import com.example.k.models.PersonalizationData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
@@ -164,30 +167,52 @@ class EditHolidayActivity : AppCompatActivity() {
             binding.countryAutoComplete.error = "No country specified in the database!"
 
         } else {
-            val database = FirebaseDatabase.getInstance()
-            val holidaysRef = database.getReference("HolidayNames")
 
-            val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
+            val firebaseRe = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
                 dateKey.toString()
             )
-            val countryData = countries.indexOf(country) + 1
-            if (oldHolidayName != null) {
-                firebaseRef.child(oldHolidayName).removeValue().addOnCompleteListener {
 
-                    firebaseRef.child(newHolidayName).child("Country").child(country)
-                        .setValue(countryData)
-                    firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
-                    firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
-                    firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
-                        .addOnCompleteListener {
-                            Toast.makeText(this, "Data updated successfully!", Toast.LENGTH_SHORT)
-                                .show()
-                            finish()
-                        }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+            if (oldHolidayName != null) {
+                firebaseRe.child(oldHolidayName).removeValue().addOnCompleteListener {
+
+                    val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+                    val username = sharedPreferences.getString("nickname", "")
+                    val firebaseAuth = FirebaseAuth.getInstance()
+                    val firebaseUser = firebaseAuth.currentUser
+                    firebaseUser?.let { user ->
+                        val uid = user.uid
+                        val datas = PersonalizationData(
+                            username,
+                        )
+
+                        val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(dateKey.toString())
+                        firebaseRef.child(newHolidayName).setValue(datas)
+
+                        val countryData = countries.indexOf(country) + 1
+
+                        firebaseRef.child(newHolidayName).child("Country").child(country)
+                            .setValue(countryData)
+                        firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
+                        firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
+                        firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
+                            .addOnCompleteListener {
+                                Toast.makeText(
+                                    this,
+                                    "Data updated successfully!",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                finish()
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(
+                                    this,
+                                    "Error: ${exception.message}",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                    }
                 }
             }
         }
