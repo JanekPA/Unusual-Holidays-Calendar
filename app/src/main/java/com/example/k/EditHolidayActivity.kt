@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
     private lateinit var holidayNameEditText: EditText
+    private lateinit var countryAutoCompleteText: AutoCompleteTextView
     private lateinit var updateButton: Button
     private lateinit var binding: ActivityEditHolidayBinding
     private var selectedActivity: MutableList<ListItem>? = mutableListOf()
@@ -32,6 +34,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private var nameHobby: TextView? = null
     private var dateKey: String? = null
     private var holidayName: String? = null
+    private var countryName: String? = null
     private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +44,7 @@ class EditHolidayActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
+        countryAutoCompleteText = findViewById(R.id.countryAutoComplete)
         updateButton = findViewById(R.id.updateButton)
         spinnerActivity = findViewById(R.id.activitySpinner)
         spinnerHobby = findViewById(R.id.hobbySpinner)
@@ -124,6 +128,10 @@ class EditHolidayActivity : AppCompatActivity() {
         dateKey = intent.getStringExtra("dateKey")
         holidayName = intent.getStringExtra("holidayName")
         holidayNameEditText.setText(holidayName)
+
+        countryName = intent.getStringExtra("country")
+        countryAutoCompleteText.setText(countryName)
+
 
         binding.countryAutoComplete.setAdapter(countryArray)
         binding.activitySpinner.setAdapter(adapter)

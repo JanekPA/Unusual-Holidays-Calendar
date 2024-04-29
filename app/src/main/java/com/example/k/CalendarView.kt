@@ -242,11 +242,14 @@ class CalendarView : AppCompatActivity() {
                 holidaysRef.child(dateKey).child(holidayName).get()
                     .addOnSuccessListener { holidaySnapshot ->
                         if (holidaySnapshot.exists()) {
+                            val countryName = holidaySnapshot.child("Country").children.first().key
                             val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
                             if(holidayAuthor == uid) {
                                 val intent = Intent(this, EditHolidayActivity::class.java)
                                 intent.putExtra("dateKey", dateKey)
                                 intent.putExtra("holidayName", holidayName)
+                                intent.putExtra("country", countryName)
+
                                 startActivity(intent)
                                 (it.context as? AlertDialog)?.dismiss()
                             }
