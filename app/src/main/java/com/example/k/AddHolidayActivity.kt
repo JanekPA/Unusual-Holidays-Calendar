@@ -1,5 +1,6 @@
 package com.example.k
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityAddHolidayBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -157,22 +159,40 @@ class AddHolidayActivity : AppCompatActivity() {
         } else if (!countries.contains(country)) {
             binding.countryAutoComplete.error = "No country specified in the database!"
         } else {
-            val firebaseRef = FirebaseDatabase.getInstance().getReference("Lobby").child(selectedDate)
-            val countryData = countries.indexOf(country)+1
 
-            firebaseRef.child(holidayName).child("Country").child(country).setValue(countryData)
-            firebaseRef.child(holidayName).child("Activities").setValue(activity)
-            firebaseRef.child(holidayName).child("Hobbies").setValue(hobby)
-            firebaseRef.child(holidayName).child("name").setValue(holidayName)
-                .addOnCompleteListener {
-                    Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
-                        .show()
-                    finish()
-                }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
-                        .show()
-                }
+            //val sharedPreferences = getSharedPreferences("RegData", Context.MODE_PRIVATE)
+            //val username = sharedPreferences.getString("nickname", "")
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+
+            firebaseUser?.let { user ->
+                val uid = user.uid
+
+                val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames")
+                    .child(selectedDate)
+                firebaseRef.child(holidayName).child("uid").setValue(uid)
+                val countryData = countries.indexOf(country) + 1
+
+                firebaseRef.child(holidayName).child("Country").child(country).setValue(countryData)
+                firebaseRef.child(holidayName).child("Activities").setValue(activity)
+                firebaseRef.child(holidayName).child("Hobbies").setValue(hobby)
+                firebaseRef.child(holidayName).child("name").setValue(holidayName)
+                    .addOnCompleteListener {
+                        Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
+                            .show()
+                        finish()
+                        startActivity(
+                            Intent(
+                                this@AddHolidayActivity,
+                                MainActivity::class.java
+                            )
+                        )
+                    }
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+            }
         }
     }
 }

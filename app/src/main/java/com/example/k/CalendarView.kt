@@ -233,14 +233,36 @@ class CalendarView : AppCompatActivity() {
 
         val editButton = dialogView.findViewById<Button>(R.id.editHoly)
         editButton.setOnClickListener {
-            holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { holidaySnapshot ->
-                if(holidaySnapshot.exists()) {
-                    val intent = Intent(this, EditHolidayActivity::class.java)
-                    intent.putExtra("dateKey", dateKey)
-                    intent.putExtra("holidayName", holidayName)
-                    startActivity(intent)
-                    (it.context as? AlertDialog)?.dismiss()
-                }
+
+            val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+
+                holidaysRef.child(dateKey).child(holidayName).get()
+                    .addOnSuccessListener { holidaySnapshot ->
+                        if (holidaySnapshot.exists()) {
+                            val countryName = holidaySnapshot.child("Country").children.first().key
+                            val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
+                            if(holidayAuthor == uid) {
+                                val intent = Intent(this, EditHolidayActivity::class.java)
+                                intent.putExtra("dateKey", dateKey)
+                                intent.putExtra("holidayName", holidayName)
+                                intent.putExtra("country", countryName)
+
+                                startActivity(intent)
+                                (it.context as? AlertDialog)?.dismiss()
+                            }
+                            else
+                            {
+                                Toast.makeText(
+                                    this,
+                                    "You are not author, you can not modify!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
             }
         }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -14,10 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityEditHolidayBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
     private lateinit var holidayNameEditText: EditText
+    private lateinit var countryAutoCompleteText: AutoCompleteTextView
     private lateinit var updateButton: Button
     private lateinit var binding: ActivityEditHolidayBinding
     private var selectedActivity: MutableList<ListItem>? = mutableListOf()
@@ -31,6 +34,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private var nameHobby: TextView? = null
     private var dateKey: String? = null
     private var holidayName: String? = null
+    private var countryName: String? = null
     private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +44,7 @@ class EditHolidayActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
+        countryAutoCompleteText = findViewById(R.id.countryAutoComplete)
         updateButton = findViewById(R.id.updateButton)
         spinnerActivity = findViewById(R.id.activitySpinner)
         spinnerHobby = findViewById(R.id.hobbySpinner)
@@ -124,6 +129,10 @@ class EditHolidayActivity : AppCompatActivity() {
         holidayName = intent.getStringExtra("holidayName")
         holidayNameEditText.setText(holidayName)
 
+        countryName = intent.getStringExtra("country")
+        countryAutoCompleteText.setText(countryName)
+
+
         binding.countryAutoComplete.setAdapter(countryArray)
         binding.activitySpinner.setAdapter(adapter)
         binding.hobbySpinner.setAdapter(adapter2)
@@ -168,28 +177,51 @@ class EditHolidayActivity : AppCompatActivity() {
             val database = FirebaseDatabase.getInstance()
             val holidaysRef = database.getReference("HolidayNames")
 
-            val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
+            val firebaseReff = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
                 dateKey.toString()
             )
-            val countryData = countries.indexOf(country) + 1
             if (oldHolidayName != null) {
-                firebaseRef.child(oldHolidayName).removeValue().addOnCompleteListener {
+                firebaseReff.child(oldHolidayName).removeValue().addOnCompleteListener {
 
-                    firebaseRef.child(newHolidayName).child("Country").child(country)
-                        .setValue(countryData)
-                    firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
-                    firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
-                    firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
-                        .addOnCompleteListener {
-                            Toast.makeText(this, "Data updated successfully!", Toast.LENGTH_SHORT)
-                                .show()
-                            finish()
-                            startActivity(Intent(this@EditHolidayActivity, MainActivity::class.java))
-                        }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    val firebaseAuth = FirebaseAuth.getInstance()
+                    val firebaseUser = firebaseAuth.currentUser
+                    firebaseUser?.let { user ->
+                        val uid = user.uid
+
+                        val firebaseRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(dateKey.toString())
+                        firebaseRef.child(newHolidayName).child("uid").setValue(uid)
+
+                        val countryData = countries.indexOf(country) + 1
+
+                        firebaseRef.child(newHolidayName).child("Country").child(country)
+                            .setValue(countryData)
+                        firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
+                        firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
+                        firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
+                            .addOnCompleteListener {
+                                Toast.makeText(
+                                    this,
+                                    "Data updated successfully!",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                finish()
+                                startActivity(
+                                    Intent(
+                                        this@EditHolidayActivity,
+                                        MainActivity::class.java
+                                    )
+                                )
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(
+                                    this,
+                                    "Error: ${exception.message}",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                    }
                 }
             }
         }
