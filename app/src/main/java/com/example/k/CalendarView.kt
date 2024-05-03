@@ -16,6 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.example.k.databinding.ActivityCalendarViewBinding
+import com.example.k.models.ListItem
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -98,20 +99,93 @@ class CalendarView : AppCompatActivity() {
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val dateKey = "${dayOfMonth.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}"
             val fullDate = "$dateKey-$year"
+
+            val firebaseAuthRD = FirebaseAuth.getInstance()
+            val firebaseUserRD = firebaseAuthRD.currentUser
+            val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+            val userPersonalizationRD =
+                firebaseDatabaseRD.getReference("UsersPersonalization")
+            val activityListP = mutableListOf<ListItem>()
+            val hobbyListP = mutableListOf<ListItem>()
+            firebaseUserRD?.let { user ->
+                val uid = user.uid
+
+                userPersonalizationRD.child(uid).get()
+                    .addOnSuccessListener { persSnapshot ->
+                        if (persSnapshot.exists()) {
+                            //val countryName =
+                            //    persSnapshot.child("Country").children.first().key
+                            val hobbiesP = persSnapshot.child("Hobbies")
+                            val activitiesP = persSnapshot.child("Activities")
+                            ///AKTYWNOSC + HOBBY - POBRANIE
+                            for (hobbySnapshot in hobbiesP.children) {
+                                val hobbyName = hobbySnapshot.key
+                                hobbyName?.let { hobbyListP.add(ListItem(it)) }
+                            }
+
+                            ///AKTYWNOSC + HOBBY - POBRANIE
+                            for (activitySnapshot in activitiesP.children) {
+                                val activityName = activitySnapshot.key
+                                activityName?.let { activityListP.add(ListItem(it)) }
+                            }
+                        }
+                    }
+            }
+
             holidaysRef.child(dateKey).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
                     holidayNamesLayout.orientation = LinearLayout.VERTICAL
                     holidayNamesLayout.removeAllViews()
 
                     for (holidaySnapshot in dataSnapshot.children) {
-                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
-                        holidayName?.let { name ->
-                            val customButton = layoutInflater.inflate(R.layout.custom_button_layout, null) as Button
-                            customButton.text = name
-                            customButton.setOnClickListener {
-                                showHolidayNameDialog(name)
+
+                        var check1 = 0;
+                        var check2 =0;
+
+                        val hobbiesC = holidaySnapshot.child("Hobbies")
+                        val activitiesC = holidaySnapshot.child("Activities")
+                        ///AKTYWNOSC + HOBBY - POBRANIE
+                        val hobbyList = mutableListOf<ListItem>()
+                        for (hobbySnapshot in hobbiesC.children) {
+                            val hobbyName = hobbySnapshot.key
+                            hobbyName?.let { hobbyList.add(ListItem(it)) }
+                        }
+
+                        ///AKTYWNOSC + HOBBY - POBRANIE
+                        val activityList = mutableListOf<ListItem>()
+                        for (activitySnapshot in activitiesC.children) {
+                            val activityName = activitySnapshot.key
+                            activityName?.let { activityList.add(ListItem(it)) }
+                        }
+
+                        for (activity in activityList) {
+                            if (activityListP.any { activityP -> activityP.name == activity.name }) {
+                                check1 = 1
+                                break;
                             }
-                            holidayNamesLayout.addView(customButton)
+                        }
+
+                        for (hobby in hobbyList) {
+                            if (hobbyListP.any { hobbyP -> hobbyP.name == hobby.name }) {
+                                check2 = 1
+                                break;
+                            }
+                        }
+
+                        if (check1 == 1 || check2 == 1) {
+                            val holidayName =
+                                holidaySnapshot.child("name").getValue(String::class.java)
+                            holidayName?.let { name ->
+                                val customButton = layoutInflater.inflate(
+                                    R.layout.custom_button_layout,
+                                    null
+                                ) as Button
+                                customButton.text = name
+                                customButton.setOnClickListener {
+                                    showHolidayNameDialog(name)
+                                }
+                                holidayNamesLayout.addView(customButton)
+                            }
                         }
                     }
 
