@@ -20,6 +20,12 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.util.Log
+import android.widget.TextView
+import com.example.k.models.ListItem
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -27,10 +33,12 @@ import com.google.firebase.storage.FirebaseStorage
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView: ImageView
     private val REQUEST_EXTERNAL_STORAGE = 1
+    private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,20 +46,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+
         firebaseAuth = FirebaseAuth.getInstance()
         setupViews()
+        firebaseDatabase = FirebaseDatabase.getInstance()
 
+        uid = firebaseAuth.currentUser?.uid.toString()
+        loadNickname()
         val navigationView: NavigationView = findViewById(R.id.navigation_view)
         val headerView = navigationView.getHeaderView(0)
-
         profileImageView = headerView.findViewById(R.id.View_Image2)
+
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
-                    val intent = Intent(this, PrefChanging::class.java)
-                    startActivity(intent)
+                    retrievingDataToPrefChanging()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
@@ -66,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 
             drawerLayout.closeDrawer(GravityCompat.START)
             true
+
         }
 
 
@@ -160,5 +174,76 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission denied. Unable to access external storage.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    private fun retrievingDataToPrefChanging()
+    {
+        val firebaseAuthRD = FirebaseAuth.getInstance()
+        val firebaseUserRD = firebaseAuthRD.currentUser
+        val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+        val userPersonalizationRD = firebaseDatabaseRD.getReference("UsersPersonalization")
+        firebaseUserRD?.let { user ->
+            val uid = user.uid
+
+            userPersonalizationRD.child(uid).get().addOnSuccessListener { persSnapshot ->
+                if(persSnapshot.exists())
+                {
+                    val countryName = persSnapshot.child("Country").children.first().key
+                    val hobbies = persSnapshot.child("Hobbies")
+                    val activities = persSnapshot.child("Activities")
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+                    val hobbyList = mutableListOf<ListItem>()
+                    for(hobbySnapshot in hobbies.children)
+                    {
+                        val hobbyName = hobbySnapshot.key
+                        hobbyName?.let {hobbyList.add(ListItem(it))}
+                    }
+
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+                    val activityList = mutableListOf<ListItem>()
+                    for(activitySnapshot in activities.children)
+                    {
+                        val activityName = activitySnapshot.key
+                        activityName?.let {activityList.add(ListItem(it))}
+                    }
+                    val intent = Intent(this, PrefChanging::class.java)
+                    intent.putExtra("countryName", countryName)
+                    if(hobbyList.isNotEmpty() && activityList.isNotEmpty()) {
+                        intent.putExtra("hobbies", hobbyList.toTypedArray())
+                        for(hobby in hobbyList)
+                        {
+                            Log.e("HOBBY",hobby.name) ///working properly
+                        }
+                        intent.putExtra("activities", activityList.toTypedArray())
+                        for(activity in activityList)
+                        {
+                            Log.e("ACTIVITY", activity.name) ///working properly
+                        }
+                    }
+                    startActivity(intent)
+                }
+            }
+
+        }
+    }
+    private fun loadNickname()
+    {
+        val nickname = firebaseDatabase.getReference("UsersPersonalization").child(uid.toString()).child("nickname")
+        nickname.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val nick = snapshot.value.toString()
+                    val navigationView: NavigationView = findViewById(R.id.navigation_view)
+                    val headerView = navigationView.getHeaderView(0)
+                    profileImageView = headerView.findViewById(R.id.View_Image2)
+
+                    val username: TextView = headerView.findViewById(R.id.textView_username)
+                    username.text = nick
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Error fetching nickname")
+                Toast.makeText(applicationContext, "Error fetching nickname", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

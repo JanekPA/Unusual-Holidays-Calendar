@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -27,23 +30,43 @@ class PrefChanging : AppCompatActivity() {
     private var spinnerActivityListItem : ArrayList<ListItem>? = ArrayList()
     private var selectedHobby : MutableList<ListItem> = mutableListOf()
     private var spinnerHobbyListItem : ArrayList<ListItem>? = ArrayList()
-    private var countryListItem : ArrayList<ListItem>? = ArrayList()
-    private var selectedCountry : MutableList<ListItem> = mutableListOf()
     private var spinnerActivity : Spinner ?= null
     private var spinnerHobby : Spinner ?= null
     private var nameActivity : TextView?= null
     private var nameHobby : TextView?= null
+    private var countryName: String?= null
 
+    private lateinit var countryAutoCompleteText: AutoCompleteTextView
     private lateinit var firebaseRef: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        binding = ActivityPrefChangingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         spinnerActivity = findViewById(R.id.activitySpinner)
         spinnerHobby = findViewById(R.id.hobbySpinner)
         nameActivity = findViewById(R.id.activityHead)
         nameHobby = findViewById(R.id.hobbyHead)
+
+        val activitiesList = intent.getStringArrayExtra("activities")
+        val hobbiesList = intent.getStringArrayExtra("hobbies")
+
+        if (activitiesList != null) {
+            for(activity in activitiesList)
+            {
+                //spinnerActivity.
+            }
+        }
+
+
 
         val activitiesArray = resources.getStringArray(R.array.activities)
         for (activity in activitiesArray) {
@@ -51,6 +74,9 @@ class PrefChanging : AppCompatActivity() {
         }
 
         selectedActivity!!.clear()
+
+
+
 
         val hobbyArray = resources.getStringArray(R.array.hobbys)
         for(hobby in hobbyArray)
@@ -60,8 +86,8 @@ class PrefChanging : AppCompatActivity() {
 
         selectedHobby.clear()
 
-        val countries = resources.getStringArray(R.array.countries)
-        val countryArray = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
+
+
 
 
 
@@ -77,7 +103,7 @@ class PrefChanging : AppCompatActivity() {
                 selectedItems: List<ListItem>,
                 pos: Int,
             ) {
-                    nameActivity?.text = "Activity"
+                nameActivity?.text = "Activity"
                 Log.e("getSelectedItems", selectedItems.toString())
                 Log.e("getSelectedItems", selectedItems.size.toString())
             }
@@ -96,20 +122,21 @@ class PrefChanging : AppCompatActivity() {
                 selectedItems: List<ListItem>,
                 pos: Int,
             ) {
-                    nameHobby?.text = "Hobby"
+                nameHobby?.text = "Hobby"
                 Log.e("getSelectedItems", selectedItems.toString())
                 Log.e("getSelectedItems", selectedItems.size.toString())
             }
         }
         )
-        binding = ActivityPrefChangingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        val countries = resources.getStringArray(R.array.countries)
+        val countryArray = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,countries)
+
+        countryAutoCompleteText = findViewById(R.id.ChangecountryAutoComplete)
+        countryName = intent.getStringExtra("countryName")
+        countryAutoCompleteText.setText(countryName)
+
         firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
 
 
@@ -148,7 +175,7 @@ class PrefChanging : AppCompatActivity() {
                 val uid = user.uid
                 val datas = PersonalizationData(
                     nickname,
-                    )
+                )
                 val firebaseRef = FirebaseDatabase.getInstance().getReference("UsersPersonalization")
                 firebaseRef.child(uid).setValue(datas)
                 val countryData = countries.indexOf(country) + 1
@@ -168,6 +195,7 @@ class PrefChanging : AppCompatActivity() {
             startActivity(persDone)
         }
     }
+
 
 
 }

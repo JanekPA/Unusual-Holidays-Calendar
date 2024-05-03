@@ -50,8 +50,7 @@ class HolidayApproval : AppCompatActivity() {
 
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
-                    val intent = Intent(this, PrefChanging::class.java)
-                    startActivity(intent)
+                    retrievingDataToPrefChanging()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
@@ -70,6 +69,31 @@ class HolidayApproval : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseRef = FirebaseDatabase.getInstance().getReference("Lobby")
         loadProfilePicture()
+    }
+
+    private fun retrievingDataToPrefChanging()
+    {
+        val firebaseAuthRD = FirebaseAuth.getInstance()
+        val firebaseUserRD = firebaseAuthRD.currentUser
+        val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+        val userPersonalizationRD = firebaseDatabaseRD.getReference("UsersPersonalization")
+        firebaseUserRD?.let { user ->
+            val uid = user.uid
+
+            userPersonalizationRD.child(uid).get().addOnSuccessListener { persSnapshot ->
+                if(persSnapshot.exists())
+                {
+                    val countryName = persSnapshot.child("Country").children.first().key
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+                    val intent = Intent(this, PrefChanging::class.java)
+                    intent.putExtra("countryName", countryName)
+                    startActivity(intent)
+                }
+            }
+
+        }
     }
 
     private fun setupViews() {

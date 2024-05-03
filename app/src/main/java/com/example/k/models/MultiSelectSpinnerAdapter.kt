@@ -4,14 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemSelectedListener
+
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.TextView
 import com.example.k.R
 
 class MultiSelectSpinnerAdapter(context : Context,
-                                private val items: List<ListItem>,
+                                val items: List<ListItem>,
 private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(context,0,items) {
     private val checkedItems = BooleanArray(items.size)
     private var onItemSelectedListener : OnItemSelectedListener ?=null
@@ -73,7 +73,7 @@ private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(cont
                 textView.text = "Select"
             }
             else{
-                var names : ArrayList<String>  = ArrayList()
+                val names : ArrayList<String>  = ArrayList()
                 for (i in getSelectedItems().indices){
                     names.add(getSelectedItems()[i].name)
                 }
@@ -88,5 +88,14 @@ private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(cont
     private fun getSelectedItems(): List<ListItem>  {
         return selectedItems
     }
-
+    fun setSelectedPositions(positions: List<Int>) {
+        selectedItems.clear()
+        positions.forEach { index ->
+            if (index in items.indices) {
+                val item = items[index]
+                selectedItems.add(item)
+            }
+        }
+        notifyDataSetChanged()
+    }
 }

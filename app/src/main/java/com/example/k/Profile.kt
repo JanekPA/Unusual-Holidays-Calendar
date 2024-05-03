@@ -27,6 +27,10 @@ import com.example.k.databinding.CommunityBinding
 import com.example.k.databinding.ProfileBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class Profile : AppCompatActivity() {
 
@@ -40,6 +44,7 @@ class Profile : AppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView: ImageView
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseDatabase: FirebaseDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ProfileBinding.inflate(layoutInflater)
@@ -80,15 +85,19 @@ class Profile : AppCompatActivity() {
         actionBarDrawerToggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+        loadNickname()
+
         val navigationView: NavigationView = findViewById(R.id.navigation_view)
         val headerView = navigationView.getHeaderView(0)
         profileImageView = headerView.findViewById(R.id.View_Image2)
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
-                    val intent = Intent(this, PrefChanging::class.java)
-                    startActivity(intent)
+                    retrievingDataToPrefChanging()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
@@ -104,7 +113,7 @@ class Profile : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-        firebaseAuth = FirebaseAuth.getInstance()
+
         loadProfilePicture()
     }
 
@@ -243,5 +252,50 @@ class Profile : AppCompatActivity() {
         editor.apply()
         finish()
         Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show()
+    }
+    private fun retrievingDataToPrefChanging()
+    {
+        val firebaseAuthRD = FirebaseAuth.getInstance()
+        val firebaseUserRD = firebaseAuthRD.currentUser
+        val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+        val userPersonalizationRD = firebaseDatabaseRD.getReference("UsersPersonalization")
+        firebaseUserRD?.let { user ->
+            val uid = user.uid
+
+            userPersonalizationRD.child(uid).get().addOnSuccessListener { persSnapshot ->
+                if(persSnapshot.exists())
+                {
+                    val countryName = persSnapshot.child("Country").children.first().key
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+                    val intent = Intent(this, PrefChanging::class.java)
+                    intent.putExtra("countryName", countryName)
+                    startActivity(intent)
+                }
+            }
+
+        }
+    }
+    private fun loadNickname()
+    {
+        val nickname = firebaseDatabase.getReference("UsersPersonalization").child(uid).child("nickname")
+        nickname.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val nick = snapshot.value.toString()
+                val navigationView: NavigationView = findViewById(R.id.navigation_view)
+                val headerView = navigationView.getHeaderView(0)
+                profileImageView = headerView.findViewById(R.id.View_Image2)
+                val usernameMAIN: TextView = findViewById(R.id.username_text)
+                usernameMAIN.text = nick
+                val username: TextView = headerView.findViewById(R.id.textView_username)
+                username.text = nick
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Error fetching nickname")
+                Toast.makeText(applicationContext, "Error fetching nickname", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

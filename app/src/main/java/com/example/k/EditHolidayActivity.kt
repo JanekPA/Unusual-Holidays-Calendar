@@ -27,7 +27,6 @@ class EditHolidayActivity : AppCompatActivity() {
     private var spinnerActivityListItem: ArrayList<ListItem>? = ArrayList()
     private var selectedHobby: MutableList<ListItem> = mutableListOf()
     private var spinnerHobbyListItem: ArrayList<ListItem>? = ArrayList()
-    private var countryListItem: ArrayList<ListItem>? = ArrayList()
     private var spinnerActivity: Spinner? = null
     private var spinnerHobby: Spinner? = null
     private var nameActivity: TextView? = null
@@ -35,7 +34,6 @@ class EditHolidayActivity : AppCompatActivity() {
     private var dateKey: String? = null
     private var holidayName: String? = null
     private var countryName: String? = null
-    private lateinit var selectedDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

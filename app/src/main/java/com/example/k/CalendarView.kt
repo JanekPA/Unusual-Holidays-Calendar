@@ -19,7 +19,10 @@ import com.example.k.databinding.ActivityCalendarViewBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -34,6 +37,8 @@ class CalendarView : AppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView: ImageView
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +57,10 @@ class CalendarView : AppCompatActivity() {
         actionBarDrawerToggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+        uid = firebaseAuth.currentUser?.uid.toString()
+        loadNickname()
         val navigationView: NavigationView = findViewById(R.id.navigation_view)
         val headerView = navigationView.getHeaderView(0)
         profileImageView = headerView.findViewById(R.id.View_Image2)
@@ -60,8 +68,7 @@ class CalendarView : AppCompatActivity() {
 
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
-                    val intent = Intent(this, PrefChanging::class.java)
-                    startActivity(intent)
+                    retrievingDataToPrefChanging()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
@@ -77,7 +84,7 @@ class CalendarView : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-        firebaseAuth = FirebaseAuth.getInstance()
+
         loadProfilePicture()
 
         // Check for specific email
@@ -220,7 +227,30 @@ class CalendarView : AppCompatActivity() {
 //            }
 //        }
 
+    private fun retrievingDataToPrefChanging()
+    {
+        val firebaseAuthRD = FirebaseAuth.getInstance()
+        val firebaseUserRD = firebaseAuthRD.currentUser
+        val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+        val userPersonalizationRD = firebaseDatabaseRD.getReference("UsersPersonalization")
+        firebaseUserRD?.let { user ->
+            val uid = user.uid
 
+            userPersonalizationRD.child(uid).get().addOnSuccessListener { persSnapshot ->
+                if(persSnapshot.exists())
+                {
+                    val countryName = persSnapshot.child("Country").children.first().key
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+
+                    ///AKTYWNOSC + HOBBY - POBRANIE
+                    val intent = Intent(this, PrefChanging::class.java)
+                    intent.putExtra("countryName", countryName)
+                    startActivity(intent)
+                }
+            }
+
+        }
+    }
     private fun showHolidayNameDialog(holidayName: String) {
         val dialogView = layoutInflater.inflate(R.layout.holiday_dialog, null)
         val holidayNameTextView = dialogView.findViewById<TextView>(R.id.holidayNameTextView)
@@ -309,5 +339,26 @@ class CalendarView : AppCompatActivity() {
         }.addOnFailureListener { exception ->
             Log.e("Firebase", "Error getting data", exception)
         }
+
+    }
+    private fun loadNickname()
+    {
+        val nickname = firebaseDatabase.getReference("UsersPersonalization").child(uid.toString()).child("nickname")
+        nickname.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val nick = snapshot.value.toString()
+                val navigationView: NavigationView = findViewById(R.id.navigation_view)
+                val headerView = navigationView.getHeaderView(0)
+                profileImageView = headerView.findViewById(R.id.View_Image2)
+
+                val username: TextView = headerView.findViewById(R.id.textView_username)
+                username.text = nick
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Error fetching nickname")
+                Toast.makeText(applicationContext, "Error fetching nickname", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

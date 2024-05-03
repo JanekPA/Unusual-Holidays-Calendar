@@ -1,6 +1,8 @@
 package com.example.k.models
 
-data class ListItem(var name : String) {
+import java.io.Serializable
+
+data class ListItem(var name : String) : Serializable{
     var itemId: Int = 0
         private set
 
