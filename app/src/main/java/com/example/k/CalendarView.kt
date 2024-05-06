@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -50,7 +51,9 @@ class CalendarView : AppCompatActivity() {
         holidayView = binding.idHolidayView
         calendarView = binding.calendarView
         holidayNamesLayout = binding.holidayNamesLayout
+
         setupViews()
+
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
 
@@ -90,8 +93,7 @@ class CalendarView : AppCompatActivity() {
 
         // Check for specific email
 
-        val database = FirebaseDatabase.getInstance()
-        val holidaysRef = database.getReference("HolidayNames")
+        val holidaysRef = firebaseDatabase.getReference("HolidayNames")
 
 
 
@@ -100,11 +102,9 @@ class CalendarView : AppCompatActivity() {
             val dateKey = "${dayOfMonth.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}"
             val fullDate = "$dateKey-$year"
 
-            val firebaseAuthRD = FirebaseAuth.getInstance()
-            val firebaseUserRD = firebaseAuthRD.currentUser
-            val firebaseDatabaseRD = FirebaseDatabase.getInstance()
+            val firebaseUserRD = firebaseAuth.currentUser
             val userPersonalizationRD =
-                firebaseDatabaseRD.getReference("UsersPersonalization")
+                firebaseDatabase.getReference("UsersPersonalization")
             val activityListP = mutableListOf<ListItem>()
             val hobbyListP = mutableListOf<ListItem>()
             firebaseUserRD?.let { user ->
@@ -120,13 +120,17 @@ class CalendarView : AppCompatActivity() {
                             ///AKTYWNOSC + HOBBY - POBRANIE
                             for (hobbySnapshot in hobbiesP.children) {
                                 val hobbyName = hobbySnapshot.key
-                                hobbyName?.let { hobbyListP.add(ListItem(it)) }
+                                hobbyName?.let {
+                                    hobbyListP.add(ListItem(it))
+                                }
                             }
 
                             ///AKTYWNOSC + HOBBY - POBRANIE
                             for (activitySnapshot in activitiesP.children) {
                                 val activityName = activitySnapshot.key
-                                activityName?.let { activityListP.add(ListItem(it)) }
+                                activityName?.let {
+                                    activityListP.add(ListItem(it))
+                                }
                             }
                         }
                     }
@@ -145,46 +149,52 @@ class CalendarView : AppCompatActivity() {
                         val hobbiesC = holidaySnapshot.child("Hobbies")
                         val activitiesC = holidaySnapshot.child("Activities")
                         ///AKTYWNOSC + HOBBY - POBRANIE
-                        val hobbyList = mutableListOf<ListItem>()
+                        val hobbyListC = mutableListOf<ListItem>()
                         for (hobbySnapshot in hobbiesC.children) {
                             val hobbyName = hobbySnapshot.key
-                            hobbyName?.let { hobbyList.add(ListItem(it)) }
+                            hobbyName?.let { hobbyListC.add(ListItem(it)) }
                         }
 
                         ///AKTYWNOSC + HOBBY - POBRANIE
-                        val activityList = mutableListOf<ListItem>()
+                        val activityListC = mutableListOf<ListItem>()
                         for (activitySnapshot in activitiesC.children) {
                             val activityName = activitySnapshot.key
-                            activityName?.let { activityList.add(ListItem(it)) }
+                            activityName?.let { activityListC.add(ListItem(it)) }
                         }
 
-                        for (activity in activityList) {
-                            if (activityListP.any { activityP -> activityP.name == activity.name }) {
+                        for (activityC in activityListC) {
+                            if (activityListP.any { activityP -> activityP.name == activityC.name }) {
                                 check1 = 1
                                 break;
                             }
                         }
 
-                        for (hobby in hobbyList) {
-                            if (hobbyListP.any { hobbyP -> hobbyP.name == hobby.name }) {
+                        for (hobbyC in hobbyListC) {
+                            if (hobbyListP.any { hobbyP -> hobbyP.name == hobbyC.name }) {
                                 check2 = 1
                                 break;
                             }
                         }
 
-                        if (check1 == 1 || check2 == 1) {
-                            val holidayName =
-                                holidaySnapshot.child("name").getValue(String::class.java)
-                            holidayName?.let { name ->
-                                val customButton = layoutInflater.inflate(
-                                    R.layout.custom_button_layout,
-                                    null
-                                ) as Button
-                                customButton.text = name
-                                customButton.setOnClickListener {
-                                    showHolidayNameDialog(name)
+                        val author = holidaySnapshot.child("uid").getValue(String::class.java)
+                        firebaseUserRD?.let { user ->
+                            val userid = user.uid
+
+
+                            if ((check1 == 1) || (check2 == 1) || (author == userid)) {
+                                val holidayName =
+                                    holidaySnapshot.child("name").getValue(String::class.java)
+                                holidayName?.let { name ->
+                                    val customButton = layoutInflater.inflate(
+                                        R.layout.custom_button_layout,
+                                        null
+                                    ) as Button
+                                    customButton.text = name
+                                    customButton.setOnClickListener {
+                                        showHolidayNameDialog(name)
+                                    }
+                                    holidayNamesLayout.addView(customButton)
                                 }
-                                holidayNamesLayout.addView(customButton)
                             }
                         }
                     }
@@ -330,15 +340,13 @@ class CalendarView : AppCompatActivity() {
         val holidayNameTextView = dialogView.findViewById<TextView>(R.id.holidayNameTextView)
         holidayNameTextView.text = holidayName
 
-        val database = FirebaseDatabase.getInstance()
-        val holidaysRef = database.getReference("HolidayNames")
+        val holidaysRef = firebaseDatabase.getReference("HolidayNames")
         val fullDate = dateTV.text.toString()
         val dateKey = fullDate.substring(0, 5)
 
         val editButton = dialogView.findViewById<Button>(R.id.editHoly)
         editButton.setOnClickListener {
 
-            val firebaseAuth = FirebaseAuth.getInstance()
             val firebaseUser = firebaseAuth.currentUser
             firebaseUser?.let { user ->
                 val uid = user.uid
@@ -348,7 +356,7 @@ class CalendarView : AppCompatActivity() {
                         if (holidaySnapshot.exists()) {
                             val countryName = holidaySnapshot.child("Country").children.first().key
                             val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
-                            if(holidayAuthor == uid) {
+                            if (holidayAuthor == uid) {
                                 val intent = Intent(this, EditHolidayActivity::class.java)
                                 intent.putExtra("dateKey", dateKey)
                                 intent.putExtra("holidayName", holidayName)
@@ -356,12 +364,10 @@ class CalendarView : AppCompatActivity() {
 
                                 startActivity(intent)
                                 (it.context as? AlertDialog)?.dismiss()
-                            }
-                            else
-                            {
+                            } else {
                                 Toast.makeText(
                                     this,
-                                    "You are not author, you can not modify!",
+                                    "You are not the author, you cannot modify!",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -377,7 +383,20 @@ class CalendarView : AppCompatActivity() {
 
         dialog.show()
 
-
+        val currentUser = firebaseAuth.currentUser
+        currentUser?.let { user ->
+            val uid = user.uid
+            holidaysRef.child(dateKey).child(holidayName).child("uid").get().addOnSuccessListener { dataSnapshot ->
+                val authorUID = dataSnapshot.getValue(String::class.java)
+                if (authorUID == uid) {
+                    editButton.visibility = View.VISIBLE
+                } else {
+                    editButton.visibility = View.GONE
+                }
+            }.addOnFailureListener {
+                Log.e("Firebase", "Error fetching author UID", it)
+            }
+        }
 
         holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
@@ -413,6 +432,7 @@ class CalendarView : AppCompatActivity() {
         }.addOnFailureListener { exception ->
             Log.e("Firebase", "Error getting data", exception)
         }
+
 
     }
     private fun loadNickname()
