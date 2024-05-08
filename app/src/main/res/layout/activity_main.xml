@@ -16,6 +16,44 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <ImageView
+            android:id="@+id/calendarIcon"
+            android:layout_width="360dp"
+            android:layout_height="475dp"
+            android:src="@drawable/calendar_today"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.367" />
+
+        <TextView
+            android:id="@+id/idDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@+id/calendarIcon"
+            app:layout_constraintStart_toStartOf="@+id/calendarIcon"
+            app:layout_constraintEnd_toEndOf="@+id/calendarIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/calendarIcon"/>
+
+        <TextView
+            android:id="@+id/holidaysListTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/calendarIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/idDate" />
+
+
         <Button
             android:id="@+id/Account_button"
             android:layout_width="50dp"
