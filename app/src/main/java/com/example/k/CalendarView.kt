@@ -345,6 +345,22 @@ class CalendarView : AppCompatActivity() {
         val dateKey = fullDate.substring(0, 5)
 
         val editButton = dialogView.findViewById<Button>(R.id.editHoly)
+
+        val currentUser = firebaseAuth.currentUser
+        currentUser?.let { user ->
+            val uid = user.uid
+            holidaysRef.child(dateKey).child(holidayName).child("uid").get().addOnSuccessListener { dataSnapshot ->
+                val authorUID = dataSnapshot.getValue(String::class.java)
+                if (authorUID == uid) {
+                    editButton.visibility = View.VISIBLE
+                } else {
+                    editButton.visibility = View.GONE
+                }
+            }.addOnFailureListener {
+                Log.e("Firebase", "Error fetching author UID", it)
+            }
+        }
+
         editButton.setOnClickListener {
 
             val firebaseUser = firebaseAuth.currentUser
@@ -383,20 +399,6 @@ class CalendarView : AppCompatActivity() {
 
         dialog.show()
 
-        val currentUser = firebaseAuth.currentUser
-        currentUser?.let { user ->
-            val uid = user.uid
-            holidaysRef.child(dateKey).child(holidayName).child("uid").get().addOnSuccessListener { dataSnapshot ->
-                val authorUID = dataSnapshot.getValue(String::class.java)
-                if (authorUID == uid) {
-                    editButton.visibility = View.VISIBLE
-                } else {
-                    editButton.visibility = View.GONE
-                }
-            }.addOnFailureListener {
-                Log.e("Firebase", "Error fetching author UID", it)
-            }
-        }
 
         holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {

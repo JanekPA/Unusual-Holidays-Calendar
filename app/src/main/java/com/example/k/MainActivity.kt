@@ -1,34 +1,35 @@
 package com.example.k
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.example.k.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
-import android.widget.ImageView
-import com.google.firebase.auth.FirebaseUser
-import com.bumptech.glide.Glide
-import android.Manifest
-import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import android.util.Log
-import android.widget.TextView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
+import com.example.k.databinding.ActivityMainBinding
 import com.example.k.models.ListItem
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-
-
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -39,12 +40,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var profileImageView: ImageView
     private val REQUEST_EXTERNAL_STORAGE = 1
     private lateinit var uid: String
-
+    private lateinit var calendarTextView: TextView
+    private lateinit var holidayTextView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+
+        calendarTextView = binding.idDate!!
+        holidayTextView = binding.holidaysListTextView!!
 
 
 
@@ -87,12 +93,31 @@ class MainActivity : AppCompatActivity() {
             requestExternalStoragePermission()
         }
         loadProfilePicture()
+
+        displayCurrentDate()
+
+        //loadHolidays()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
+    }
+
+    private fun displayCurrentDate() {
+        val currentDate = Calendar.getInstance().time
+        val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
+        val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+        val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+
+        val day = dayFormat.format(currentDate)
+        val month = monthFormat.format(currentDate).toUpperCase(Locale.getDefault())
+        val year = yearFormat.format(currentDate)
+
+        val formattedDate = "$day\n${month.capitalize(Locale.getDefault())}\n$year"
+
+        calendarTextView.text = formattedDate
     }
 
     private fun setupViews() {
@@ -137,6 +162,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         loadProfilePicture()
     }
+
     private fun loadProfilePicture() {
         // How is this working? idk trust me bro
         // Code bellow made especially for nav_drawer
@@ -161,9 +187,11 @@ class MainActivity : AppCompatActivity() {
     private fun checkExternalStoragePermission(): Boolean {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
+
     private fun requestExternalStoragePermission() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_EXTERNAL_STORAGE)
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
@@ -175,6 +203,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun retrievingDataToPrefChanging()
     {
         val firebaseAuthRD = FirebaseAuth.getInstance()
@@ -225,6 +254,7 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
     private fun loadNickname()
     {
         val nickname = firebaseDatabase.getReference("UsersPersonalization").child(uid.toString()).child("nickname")
@@ -246,4 +276,36 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+
+
+    /*private fun loadHolidays() {
+
+        val todayDate = SimpleDateFormat("dd-MM", Locale.getDefault()).format(Date())
+        val holidaysRef = firebaseDatabase.getReference("HolidayNames")
+
+        holidaysRef.child(todayDate).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()) {
+                val holidayNames = mutableListOf<String>()
+
+                for (holidaySnapshot in dataSnapshot.children) {
+                    val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                    holidayName?.let { names ->
+                        holidayNames.add(names)
+                    }
+                }
+
+                if (holidayNames.isNotEmpty()) {
+                    holidayTextView.text = holidayNames.joinToString(separator = "\n")
+                } else {
+                    holidayTextView.text = "No holidays found"
+                }
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
+        }
+    }*/
+
+
+
 }
