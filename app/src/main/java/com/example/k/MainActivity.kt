@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayCurrentDate() {
         val currentDate = Calendar.getInstance().time
-        val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
+        val dayFormat = SimpleDateFormat("d", Locale.getDefault())
         val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
         val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
 
@@ -115,7 +115,9 @@ class MainActivity : AppCompatActivity() {
         val month = monthFormat.format(currentDate).toUpperCase(Locale.getDefault())
         val year = yearFormat.format(currentDate)
 
-        val formattedDate = "$day\n${month.capitalize(Locale.getDefault())}\n$year"
+        findViewById<TextView>(R.id.yearTextView).text = year
+
+        val formattedDate = "$day\n${month.capitalize(Locale.getDefault())}"
 
         calendarTextView.text = formattedDate
     }

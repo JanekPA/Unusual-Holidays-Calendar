@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/calendarIcon"
-            android:layout_width="360dp"
-            android:layout_height="475dp"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
             android:src="@drawable/calendar_today"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,18 +29,32 @@
             app:layout_constraintVertical_bias="0.367" />
 
         <TextView
+            android:id="@+id/yearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="36sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@+id/calendarIcon"
+            app:layout_constraintBottom_toTopOf="@+id/idDate"
+            app:layout_constraintStart_toStartOf="@+id/calendarIcon"
+            app:layout_constraintEnd_toEndOf="@+id/calendarIcon"
+            android:layout_marginTop="44dp"  />
+
+        <TextView
             android:id="@+id/idDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="36sp"
+            android:textSize="45sp"
+            android:textColor="@color/black"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="@+id/calendarIcon"
+            app:layout_constraintTop_toBottomOf="@+id/yearTextView"
+            app:layout_constraintBottom_toTopOf="@+id/monthTextView"
             app:layout_constraintStart_toStartOf="@+id/calendarIcon"
             app:layout_constraintEnd_toEndOf="@+id/calendarIcon"
-            app:layout_constraintBottom_toBottomOf="@+id/calendarIcon"/>
+            android:layout_marginTop="24dp"/>
+
 
         <TextView
             android:id="@+id/holidaysListTextView"
@@ -48,10 +62,10 @@
             android:layout_height="wrap_content"
             android:padding="20dp"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/calendarIcon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idDate" />
+            app:layout_constraintTop_toBottomOf="@+id/monthTextView"
+            app:layout_constraintStart_toStartOf="@+id/calendarIcon"
+            app:layout_constraintEnd_toEndOf="@+id/calendarIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/calendarIcon"/>
 
 
         <Button
