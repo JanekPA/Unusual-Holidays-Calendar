@@ -121,7 +121,7 @@ class Settings : AppCompatActivity() {
             startActivity(intent)
         }
         binding.AdminButton?.setOnClickListener {
-            val intent = Intent(this, Community::class.java)
+            val intent = Intent(this, HolidayApproval::class.java)
             startActivity(intent)
         }
         drawerLayout = binding.myDrawerLayout

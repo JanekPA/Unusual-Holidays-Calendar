@@ -35,7 +35,6 @@ class AddHolidayActivity : AppCompatActivity() {
     private var nameActivity: TextView? = null
     private var nameHobby: TextView? = null
     private lateinit var selectedDate: String
-    private lateinit var firebaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,6 +137,7 @@ class AddHolidayActivity : AppCompatActivity() {
         val country = binding.countryAutoComplete.text.toString()
         val activity = selectedActivity?.map { it.name  to (it.itemId % 15)+1}?.toMap()
         val hobby = selectedHobby.map { it.name to (it.itemId % 15)+1 }.toMap()
+        val isAccepted = false
 
         val countries = resources.getStringArray(R.array.countries)
 
@@ -177,6 +177,7 @@ class AddHolidayActivity : AppCompatActivity() {
                 firebaseRef.child(holidayName).child("Activities").setValue(activity)
                 firebaseRef.child(holidayName).child("Hobbies").setValue(hobby)
                 firebaseRef.child(holidayName).child("name").setValue(holidayName)
+                firebaseRef.child(holidayName).child("isAccepted").setValue(isAccepted)
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
                             .show()
