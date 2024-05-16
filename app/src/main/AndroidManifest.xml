@@ -26,6 +26,14 @@
             android:label="@string/title_activity_add_holiday"
             android:theme="@style/Theme.K" />
         <activity
+            android:name=".AddNotes"
+            android:exported="false"
+            android:theme="@style/Theme.K" />
+        <activity
+            android:name=".EditNotes"
+            android:exported="false"
+            android:theme="@style/Theme.K" />
+        <activity
             android:name=".Community"
             android:exported="false"
             android:label="@string/title_activity_add_holiday"

@@ -234,6 +234,10 @@ class CalendarView : AppCompatActivity() {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
+        binding.button4Options?.setOnClickListener {
+            val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
 
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)

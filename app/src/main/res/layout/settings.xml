@@ -86,7 +86,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bar_empty" />
+                android:src="@drawable/base_edit_note_24" />
 
             <ImageButton
                 android:id="@+id/button5_Options"
