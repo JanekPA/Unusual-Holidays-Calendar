@@ -145,9 +145,11 @@ class CalendarView : AppCompatActivity() {
 
                         var check1 = 0;
                         var check2 =0;
+                        var check3 = 0; //for approval
 
                         val hobbiesC = holidaySnapshot.child("Hobbies")
                         val activitiesC = holidaySnapshot.child("Activities")
+                        val approvalC = holidaySnapshot.child("isAccepted")
                         ///AKTYWNOSC + HOBBY - POBRANIE
                         val hobbyListC = mutableListOf<ListItem>()
                         for (hobbySnapshot in hobbiesC.children) {
@@ -175,13 +177,16 @@ class CalendarView : AppCompatActivity() {
                                 break;
                             }
                         }
-
+                        if(approvalC.value == true)
+                        {
+                            check3 = 1;
+                        }
                         val author = holidaySnapshot.child("uid").getValue(String::class.java)
                         firebaseUserRD?.let { user ->
                             val userid = user.uid
 
 
-                            if ((check1 == 1) || (check2 == 1) || (author == userid)) {
+                            if (((check1 == 1) || (check2 == 1) || (author == userid)) && check3 == 1) {
                                 val holidayName =
                                     holidaySnapshot.child("name").getValue(String::class.java)
                                 holidayName?.let { name ->

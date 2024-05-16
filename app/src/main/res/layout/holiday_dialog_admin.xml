@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+
+    <Button
+        android:id="@+id/holidayNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonsquared"
+        android:text="Holiday Name"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/rejectHoliday"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:background="@android:color/transparent"
+        android:drawableEnd="@drawable/rejectholi"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/holidayNameTextView"
+ />
+
+    <Button
+        android:id="@+id/acceptHoliday"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:background="@android:color/transparent"
+        android:drawableEnd="@drawable/acceptholi"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/rejectHoliday"
+        app:layout_constraintTop_toTopOf="@id/holidayNameTextView" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/holidayNameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/MainWindow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:scrollbars="vertical">
+        </TextView>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

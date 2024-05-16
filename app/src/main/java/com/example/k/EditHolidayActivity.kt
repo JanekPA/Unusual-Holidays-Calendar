@@ -174,6 +174,7 @@ class EditHolidayActivity : AppCompatActivity() {
         } else {
             val database = FirebaseDatabase.getInstance()
             val holidaysRef = database.getReference("HolidayNames")
+            val isAccepted = false
 
             val firebaseReff = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
                 dateKey.toString()
@@ -196,6 +197,7 @@ class EditHolidayActivity : AppCompatActivity() {
                         firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
                         firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
                         firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
+                        firebaseRef.child(newHolidayName).child("isAccepted").setValue(isAccepted)
                             .addOnCompleteListener {
                                 Toast.makeText(
                                     this,
