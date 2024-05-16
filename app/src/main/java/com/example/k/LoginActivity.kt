@@ -1,9 +1,11 @@
 package com.example.k
 
+import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.widget.CheckBox
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityLoginNewBinding
@@ -64,7 +66,7 @@ class SignInActivity : AppCompatActivity() {
             val pass = binding.textLoginpassword.text.toString()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
-
+                if(isInternetAvailable()){
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val intent = Intent(this, MainActivity::class.java)
@@ -82,7 +84,11 @@ class SignInActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, "Empty Fields Are not Allowed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
+            }
+        } else{
+
+            Toast.makeText(this,"Empty fields are not allowed!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -90,7 +96,7 @@ class SignInActivity : AppCompatActivity() {
         binding.devlog.setOnClickListener {
             val devEmail = "emailf@gmail.com"
             val devPassword = "password"
-
+            if(isInternetAvailable()) {
             firebaseAuth.signInWithEmailAndPassword(devEmail, devPassword).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
 
@@ -103,7 +109,16 @@ class SignInActivity : AppCompatActivity() {
                     Toast.makeText(this, "Failed to log in with developer credentials", Toast.LENGTH_SHORT).show()
                 }
             }
+        } else {
+            Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
+
+            }
         }
+    }
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
     }
 
 
