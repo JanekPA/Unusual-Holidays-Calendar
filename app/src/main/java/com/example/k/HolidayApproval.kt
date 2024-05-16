@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.example.k.databinding.SettingsBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+
 import com.google.firebase.storage.FirebaseStorage
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -26,6 +28,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
 
 class HolidayApproval : AppCompatActivity() {
 
@@ -200,6 +203,10 @@ class HolidayApproval : AppCompatActivity() {
         }
         binding.CommunityOptions?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
+            startActivity(intent)
+        }
+        binding.button4Options?.setOnClickListener {
+            val intent = Intent(this, AddNotes::class.java)
             startActivity(intent)
         }
 

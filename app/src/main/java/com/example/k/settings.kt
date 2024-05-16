@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +17,11 @@ import com.example.k.databinding.SettingsBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.storage.FirebaseStorage
-import android.view.View
-import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 
 class Settings : AppCompatActivity() {
     private lateinit var binding: SettingsBinding
@@ -124,6 +124,11 @@ class Settings : AppCompatActivity() {
             val intent = Intent(this, HolidayApproval::class.java)
             startActivity(intent)
         }
+        binding.button4Options?.setOnClickListener {
+            val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
+
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
 

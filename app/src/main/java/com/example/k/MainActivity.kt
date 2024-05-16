@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_EXTERNAL_STORAGE = 1
     private lateinit var uid: String
     private lateinit var calendarTextView: TextView
-    private lateinit var holidayTextView: TextView
+    private lateinit var notesTextView: Button
+    private lateinit var yourNotesTextView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,10 +53,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         calendarTextView = binding.idDate!!
-        holidayTextView = binding.holidaysListTextView!!
+        notesTextView = binding.editNotes!!
+        yourNotesTextView = binding.yourNotes!!
 
 
-
+        val yourNotes = "Your notes for today:"
+        yourNotesTextView.text = yourNotes
 
         firebaseAuth = FirebaseAuth.getInstance()
         setupViews()
@@ -96,7 +101,9 @@ class MainActivity : AppCompatActivity() {
 
         displayCurrentDate()
 
-        //loadHolidays()
+        loadNotes()
+
+        retrievingDataToEditNotes()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -136,6 +143,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.communityMain?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
+            startActivity(intent)
+        }
+        binding.button4?.setOnClickListener {
+            val intent = Intent(this, AddNotes::class.java)
             startActivity(intent)
         }
         drawerLayout = binding.myDrawerLayout
@@ -257,6 +268,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun retrievingDataToEditNotes()
+    {
+        val editButton = findViewById<Button>(R.id.editNotes)
+
+        val firebaseAuth = FirebaseAuth.getInstance()
+
+        val todayDate = SimpleDateFormat("dd-MM", Locale.getDefault()).format(Date())
+
+        editButton.setOnClickListener {
+
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+
+                val firebaseRef = FirebaseDatabase.getInstance().getReference("Notes")
+
+                firebaseRef.child(uid).child(todayDate).get()
+                    .addOnSuccessListener { notesSnapshot ->
+                        if (notesSnapshot.exists()) {
+                            val text = notesSnapshot.child("text").getValue(String::class.java)
+                            val intent = Intent(this, EditNotes::class.java)
+                            intent.putExtra("dateKey", todayDate)
+                            intent.putExtra("text", text)
+                            startActivity(intent)
+                        }
+                        else
+                        {
+                            val intent = Intent(this, EditNotes::class.java)
+                            intent.putExtra("dateKey", todayDate)
+                            startActivity(intent)
+                        }
+                    }
+            }
+        }
+    }
+
+
     private fun loadNickname()
     {
         val nickname = firebaseDatabase.getReference("UsersPersonalization").child(uid.toString()).child("nickname")
@@ -281,32 +329,32 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    /*private fun loadHolidays() {
+    private fun loadNotes() {
 
         val todayDate = SimpleDateFormat("dd-MM", Locale.getDefault()).format(Date())
-        val holidaysRef = firebaseDatabase.getReference("HolidayNames")
 
-        holidaysRef.child(todayDate).get().addOnSuccessListener { dataSnapshot ->
-            if (dataSnapshot.exists()) {
-                val holidayNames = mutableListOf<String>()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val firebaseUser = firebaseAuth.currentUser
 
-                for (holidaySnapshot in dataSnapshot.children) {
-                    val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
-                    holidayName?.let { names ->
-                        holidayNames.add(names)
+        firebaseUser?.let { user ->
+            val uid = user.uid
+            val holidaysRef = firebaseDatabase.getReference("Notes")
+
+            holidaysRef.child(uid).child(todayDate).get().addOnSuccessListener { dataSnapshot ->
+                if (dataSnapshot.exists()) {
+                    val text = dataSnapshot.child("text").getValue(String::class.java)
+                    notesTextView.text = text.toString()
+
                     }
-                }
-
-                if (holidayNames.isNotEmpty()) {
-                    holidayTextView.text = holidayNames.joinToString(separator = "\n")
-                } else {
-                    holidayTextView.text = "No holidays found"
-                }
+                else
+                    {
+                        notesTextView.text = "You have no notes for this day"
+                    }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
         }
-    }*/
+    }
 
 
 
