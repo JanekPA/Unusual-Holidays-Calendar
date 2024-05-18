@@ -114,6 +114,54 @@ class Profile : AppCompatActivity() {
         }
 
         loadProfilePicture()
+
+        showUserPreferences()
+    }
+
+    private fun showUserPreferences() {
+
+        val holidaysRef = firebaseDatabase.getReference("UsersPersonalization")
+
+            val firebaseUser = firebaseAuth.currentUser
+            firebaseUser?.let { user ->
+                val uid = user.uid
+
+                holidaysRef.child(uid).get()
+                    .addOnSuccessListener { dataSnapshot ->
+                    if (dataSnapshot.exists()) {
+
+                        val country = dataSnapshot.child("Country").children.map { activity ->
+                            activity.key!!
+                        }.toList()
+                        val activities = dataSnapshot.child("Activities").children.map { activity ->
+                            activity.key!!
+                        }.toList()
+
+                        val hobbies = dataSnapshot.child("Hobbies").children.map { hobby ->
+                            hobby.key!!
+                        }.toList()
+
+                        val holidayInfo = StringBuilder()
+                        val countryString = country.joinToString(", ")
+                        holidayInfo.append("Country: $countryString\n")
+
+                        holidayInfo.append("\nActivities:\n")
+                        activities.forEach { activity ->
+                            holidayInfo.append("- $activity\n")
+                        }
+
+                        holidayInfo.append("\nHobbies:\n")
+                        hobbies.forEach { hobby ->
+                            holidayInfo.append("- $hobby\n")
+                        }
+
+                        val mainWindowTextView = findViewById<TextView>(R.id.info_text_view)
+                        mainWindowTextView.text = holidayInfo.toString()
+                    }
+                }.addOnFailureListener { exception ->
+                    Log.e("Firebase", "Error getting data", exception)
+                }
+            }
     }
 
     private fun openImageChooser() {

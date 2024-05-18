@@ -379,12 +379,14 @@ class CalendarView : AppCompatActivity() {
                 holidaysRef.child(dateKey).child(holidayName).get()
                     .addOnSuccessListener { holidaySnapshot ->
                         if (holidaySnapshot.exists()) {
+                            val description = holidaySnapshot.child("description").getValue(String::class.java)
                             val countryName = holidaySnapshot.child("Country").children.first().key
                             val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
                             if (holidayAuthor == uid) {
                                 val intent = Intent(this, EditHolidayActivity::class.java)
                                 intent.putExtra("dateKey", dateKey)
                                 intent.putExtra("holidayName", holidayName)
+                                intent.putExtra("description", description)
                                 intent.putExtra("country", countryName)
 
                                 startActivity(intent)
@@ -424,8 +426,9 @@ class CalendarView : AppCompatActivity() {
                 }.toList()
 
                 val holidayInfo = StringBuilder()
-                country?.let { holidayInfo.append("Country: $it\n") }
-                holidayInfo.append("Date: $fullDate\n\n")
+                val countryString = country.joinToString(", ")
+                holidayInfo.append("Country: $countryString\n")
+                holidayInfo.append("\nDate: $fullDate\n\n")
 
                 holidayInfo.append("Activities:\n")
                 activities.forEach { activity ->

@@ -26,7 +26,7 @@
             <android.widget.CalendarView
                 android:id="@+id/calendarV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="314dp"
                 android:layout_marginTop="16dp" />
 
             <EditText
@@ -36,6 +36,14 @@
                 android:layout_marginTop="16dp"
                 android:hint="Enter holiday name"
                 android:drawableLeft="@drawable/baseline_celeb"/>
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Enter description"
+                android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"/>
 
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"

@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 class EditHolidayActivity : AppCompatActivity() {
     private lateinit var holidayNameEditText: EditText
+    private lateinit var descriptionEditText: EditText
     private lateinit var countryAutoCompleteText: AutoCompleteTextView
     private lateinit var updateButton: Button
     private lateinit var binding: ActivityEditHolidayBinding
@@ -33,6 +34,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private var nameHobby: TextView? = null
     private var dateKey: String? = null
     private var holidayName: String? = null
+    private var holidayDescription: String? = null
     private var countryName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,7 @@ class EditHolidayActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
+        descriptionEditText = findViewById(R.id.descriptionEditText)
         countryAutoCompleteText = findViewById(R.id.countryAutoComplete)
         updateButton = findViewById(R.id.updateButton)
         spinnerActivity = findViewById(R.id.activitySpinner)
@@ -125,7 +128,10 @@ class EditHolidayActivity : AppCompatActivity() {
 
         dateKey = intent.getStringExtra("dateKey")
         holidayName = intent.getStringExtra("holidayName")
+        holidayDescription = intent.getStringExtra("description")
+
         holidayNameEditText.setText(holidayName)
+        descriptionEditText.setText(holidayDescription)
 
         countryName = intent.getStringExtra("country")
         countryAutoCompleteText.setText(countryName)
@@ -150,6 +156,7 @@ class EditHolidayActivity : AppCompatActivity() {
         val countries = resources.getStringArray(R.array.countries)
 
         val newHolidayName = holidayNameEditText.text.toString().trim()
+        val description = descriptionEditText.text.toString().trim()
         val oldHolidayName = holidayName.toString()
 
         if (newHolidayName.isEmpty() || dateKey==null || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
@@ -197,6 +204,7 @@ class EditHolidayActivity : AppCompatActivity() {
                         firebaseRef.child(newHolidayName).child("Activities").setValue(activity)
                         firebaseRef.child(newHolidayName).child("Hobbies").setValue(hobby)
                         firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
+                        firebaseRef.child(newHolidayName).child("description").setValue(description)
                         firebaseRef.child(newHolidayName).child("isAccepted").setValue(isAccepted)
                             .addOnCompleteListener {
                                 Toast.makeText(

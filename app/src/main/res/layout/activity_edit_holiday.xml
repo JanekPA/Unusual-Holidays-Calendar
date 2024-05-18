@@ -33,6 +33,14 @@
                 android:hint="Enter a new holiday name"
                 android:drawableLeft="@drawable/baseline_celeb"/>
 
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Enter a new description"
+                android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"/>
+
             <AutoCompleteTextView
                 android:id="@+id/countryAutoComplete"
                 android:layout_width="match_parent"

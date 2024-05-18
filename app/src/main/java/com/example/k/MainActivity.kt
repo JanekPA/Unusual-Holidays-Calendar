@@ -274,7 +274,7 @@ class MainActivity : AppCompatActivity() {
 
         val firebaseAuth = FirebaseAuth.getInstance()
 
-        val todayDate = SimpleDateFormat("dd-MM", Locale.getDefault()).format(Date())
+        val todayDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
         editButton.setOnClickListener {
 
@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadNotes() {
 
-        val todayDate = SimpleDateFormat("dd-MM", Locale.getDefault()).format(Date())
+        val todayDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
         val firebaseAuth = FirebaseAuth.getInstance()
         val firebaseUser = firebaseAuth.currentUser

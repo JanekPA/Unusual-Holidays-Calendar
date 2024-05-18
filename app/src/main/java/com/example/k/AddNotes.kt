@@ -38,7 +38,7 @@ class AddNotes : AppCompatActivity() {
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             selectedDate = "${dayOfMonth.toString().padStart(2, '0')}-${
                 (month + 1).toString().padStart(2, '0')
-            }"
+            }-${year}"
         }
 
         val saveButton: Button = findViewById(R.id.saveButton)

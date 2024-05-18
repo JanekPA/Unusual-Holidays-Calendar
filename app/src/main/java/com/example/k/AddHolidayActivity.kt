@@ -17,7 +17,6 @@ import com.example.k.databinding.ActivityAddHolidayBinding
 import com.example.k.models.ListItem
 import com.example.k.models.MultiSelectSpinnerAdapter
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class AddHolidayActivity : AppCompatActivity() {
@@ -25,6 +24,7 @@ class AddHolidayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddHolidayBinding
     private lateinit var calendarView: CalendarView
     private lateinit var holidayNameEditText: EditText
+    private lateinit var descriptionEditText: EditText
     private lateinit var countryAutoComplete: AutoCompleteTextView
     private var selectedActivity: MutableList<ListItem>? = mutableListOf()
     private var spinnerActivityListItem: ArrayList<ListItem>? = ArrayList()
@@ -44,6 +44,7 @@ class AddHolidayActivity : AppCompatActivity() {
 
         calendarView = findViewById(R.id.calendarV)
         holidayNameEditText = findViewById(R.id.holidayNameEditText)
+        descriptionEditText = findViewById(R.id.descriptionEditText)
         countryAutoComplete = findViewById(R.id.countryAutoComplete)
         spinnerActivity = findViewById(R.id.activitySpinner)
         spinnerHobby = findViewById(R.id.hobbySpinner)
@@ -142,6 +143,8 @@ class AddHolidayActivity : AppCompatActivity() {
         val countries = resources.getStringArray(R.array.countries)
 
         val holidayName = holidayNameEditText.text.toString().trim()
+        val description = descriptionEditText.text.toString().trim()
+
         if (holidayName.isEmpty() || selectedDate.isEmpty() || country.isEmpty() || activity.isNullOrEmpty() || hobby.isNullOrEmpty()) {
             if (holidayName.isEmpty())
                 Toast.makeText(this, "Holiday name cannot be empty!", Toast.LENGTH_LONG).show()
@@ -177,6 +180,7 @@ class AddHolidayActivity : AppCompatActivity() {
                 firebaseRef.child(holidayName).child("Activities").setValue(activity)
                 firebaseRef.child(holidayName).child("Hobbies").setValue(hobby)
                 firebaseRef.child(holidayName).child("name").setValue(holidayName)
+                firebaseRef.child(holidayName).child("description").setValue(description)
                 firebaseRef.child(holidayName).child("isAccepted").setValue(isAccepted)
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
