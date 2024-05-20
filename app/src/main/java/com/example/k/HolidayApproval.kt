@@ -7,24 +7,24 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
+import com.example.k.databinding.HolidayapprovalBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.storage.FirebaseStorage
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import com.example.k.databinding.HolidayapprovalBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 
 
 class HolidayApproval : AppCompatActivity() {
@@ -313,6 +313,8 @@ class HolidayApproval : AppCompatActivity() {
             if (dataSnapshot.exists()) {
                 Log.d("HolidayApproval", "Data snapshot value: $dataSnapshot")
 
+                val description = dataSnapshot.child("description").getValue(String::class.java)
+
                 val country = dataSnapshot.child("Country").children.map { activity ->
                     activity.key!!
                 }.toList()
@@ -327,8 +329,12 @@ class HolidayApproval : AppCompatActivity() {
                 }.toList()
 
                 val holidayInfo = StringBuilder()
+
+                holidayInfo.append("Description: $description\n")
+
                 val countryString = country.joinToString(", ")
                 holidayInfo.append("Country: $countryString\n")
+
                 holidayInfo.append("Date: $dateKey\n\n")
 
                 holidayInfo.append("Activities:\n")

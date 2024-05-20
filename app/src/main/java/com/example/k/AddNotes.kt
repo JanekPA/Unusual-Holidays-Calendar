@@ -79,8 +79,10 @@ class AddNotes : AppCompatActivity() {
                             firebaseRef.child("text").setValue(text)
                                 .addOnCompleteListener {
                                     Toast.makeText(this@AddNotes, "Data added successfully!", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@AddNotes, MainActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                                     finish()
-                                    startActivity(Intent(this@AddNotes, MainActivity::class.java))
+                                    startActivity(intent)
                                 }
                                 .addOnFailureListener { exception ->
                                     Toast.makeText(this@AddNotes, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
