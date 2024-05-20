@@ -16,6 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.example.k.databinding.HolidayapprovalBinding
+import com.example.k.models.ListItem
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -177,11 +178,40 @@ class HolidayApproval : AppCompatActivity() {
                 if(persSnapshot.exists())
                 {
                     val countryName = persSnapshot.child("Country").children.first().key
+                    val hobbies = persSnapshot.child("Hobbies")
+                    val activities = persSnapshot.child("Activities")
                     ///AKTYWNOSC + HOBBY - POBRANIE
+                    val hobbyList = mutableListOf<ListItem>()
+                    for(hobbySnapshot in hobbies.children)
+                    {
+                        val hobbyName = hobbySnapshot.key
+                        hobbyName?.let {hobbyList.add(ListItem(it))}
+                    }
 
                     ///AKTYWNOSC + HOBBY - POBRANIE
+                    val activityList = mutableListOf<ListItem>()
+                    for(activitySnapshot in activities.children)
+                    {
+                        val activityName = activitySnapshot.key
+                        activityName?.let {activityList.add(ListItem(it))}
+                    }
                     val intent = Intent(this, PrefChanging::class.java)
                     intent.putExtra("countryName", countryName)
+                    if(hobbyList.isNotEmpty() && activityList.isNotEmpty()) {
+                        intent.putExtra("hobbies", hobbyList.toTypedArray())
+                        for(hobby in hobbyList)
+                        {
+                            Log.e("HOBBY",hobby.name) ///working properly
+                        }
+                        intent.putExtra("activities", activityList.toTypedArray())
+                        for(activity in activityList)
+                        {
+                            Log.e("ACTIVITY", activity.name) ///working properly
+                        }
+                    }
+                    intent.putParcelableArrayListExtra("hobbies", ArrayList(hobbyList))
+                    intent.putParcelableArrayListExtra("activities",ArrayList(activityList))
+
                     startActivity(intent)
                 }
             }
