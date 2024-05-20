@@ -3,6 +3,7 @@ package com.example.k
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -32,6 +33,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import android.graphics.Color
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -56,6 +59,11 @@ class MainActivity : AppCompatActivity() {
         notesTextView = binding.editNotes!!
         yourNotesTextView = binding.yourNotes!!
 
+        val editNotesButton = findViewById<Button>(R.id.editNotes)
+        editNotesButton.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+        val editDrawable = ContextCompat.getDrawable(this, R.drawable.edit)
+        editDrawable?.setTint(ContextCompat.getColor(this, android.R.color.white))
+        editNotesButton.background = editDrawable
 
         val yourNotes = "Your notes for today:"
         yourNotesTextView.text = yourNotes
@@ -114,19 +122,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayCurrentDate() {
         val currentDate = Calendar.getInstance().time
-        val dayFormat = SimpleDateFormat("d", Locale.getDefault())
-        val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
-        val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+        val dayFormat = SimpleDateFormat("d", Locale.ENGLISH)
+        val monthFormat = SimpleDateFormat("MMM", Locale.ENGLISH)
+        val yearFormat = SimpleDateFormat("yyyy", Locale.ENGLISH)
+        val dayOfWeekFormat = SimpleDateFormat("EEEE", Locale.ENGLISH)
 
         val day = dayFormat.format(currentDate)
         val month = monthFormat.format(currentDate).toUpperCase(Locale.getDefault())
         val year = yearFormat.format(currentDate)
+        val dayOfWeek = dayOfWeekFormat.format(currentDate)
 
         findViewById<TextView>(R.id.yearTextView).text = year
-
-        val formattedDate = "$day\n${month.capitalize(Locale.getDefault())}"
-
-        calendarTextView.text = formattedDate
+        findViewById<TextView>(R.id.month).text = month
+        findViewById<TextView>(R.id.idDate).text = day
+        findViewById<TextView>(R.id.dayname).text = dayOfWeek
     }
 
     private fun setupViews() {
@@ -333,7 +342,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun loadNotes() {
-
         val todayDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -346,18 +354,21 @@ class MainActivity : AppCompatActivity() {
             holidaysRef.child(uid).child(todayDate).get().addOnSuccessListener { dataSnapshot ->
                 if (dataSnapshot.exists()) {
                     val text = dataSnapshot.child("text").getValue(String::class.java)
-                    notesTextView.text = text.toString()
-
-                    }
-                else
-                    {
-                        notesTextView.text = "You have no notes for this day"
-                    }
+                    // Znajdź TextView o id "notes"
+                    val notesTextView: TextView = findViewById(R.id.notes)
+                    // Ustaw tekst notatek w TextView
+                    notesTextView.text = text ?: "You have no notes for this day"
+                } else {
+                    // Jeśli nie ma notatek, wyświetl odpowiedni komunikat
+                    val notesTextView: TextView = findViewById(R.id.notes)
+                    notesTextView.text = "You have no notes for this day"
+                }
             }.addOnFailureListener {
                 Toast.makeText(this, "Error fetching holiday details.", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
 
 

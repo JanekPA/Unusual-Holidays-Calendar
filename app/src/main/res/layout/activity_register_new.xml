@@ -44,7 +44,7 @@
                 android:hint="Name"
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/Gray"/>
 
             <EditText
                 android:id="@+id/text_email"
@@ -56,7 +56,7 @@
                 android:drawablePadding="8dp"
                 android:hint="Email"
                 android:padding="8dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/Gray" />
 
             <EditText
                 android:layout_width="312dp"
@@ -68,7 +68,7 @@
                 android:hint="Username"
                 android:drawableLeft="@drawable/account"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/Gray"/>
 
             <EditText
                 android:layout_width="312dp"
@@ -81,7 +81,7 @@
                 android:inputType="textPassword"
                 android:drawableLeft="@drawable/baseline_lock_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/Gray"/>
 
             <Button
                 android:id="@+id/registerclick"
@@ -90,6 +90,7 @@
                 android:layout_marginTop="50dp"
                 android:backgroundTint="#74c69d"
                 android:text="Sign Up!"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:cornerRadius="20dp" />
 
