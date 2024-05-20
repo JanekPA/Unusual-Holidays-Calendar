@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Spinner
@@ -26,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 class PrefChanging : AppCompatActivity() {
     private lateinit var binding: ActivityPrefChangingBinding
-    private var selectedActivity : MutableList<ListItem>? = mutableListOf()
+    private var selectedActivity : MutableList<ListItem> = mutableListOf()
     private var spinnerActivityListItem : ArrayList<ListItem>? = ArrayList()
     private var selectedHobby : MutableList<ListItem> = mutableListOf()
     private var spinnerHobbyListItem : ArrayList<ListItem>? = ArrayList()
@@ -56,24 +54,35 @@ class PrefChanging : AppCompatActivity() {
         nameActivity = findViewById(R.id.activityHead)
         nameHobby = findViewById(R.id.hobbyHead)
 
-        val activitiesList = intent.getStringArrayExtra("activities")
-        val hobbiesList = intent.getStringArrayExtra("hobbies")
+        val activitiesList: ArrayList<ListItem>? =  intent.getParcelableArrayListExtra("activities")
+        val hobbiesList: ArrayList<ListItem>? = intent.getParcelableArrayListExtra("hobbies")
 
         if (activitiesList != null) {
             for(activity in activitiesList)
             {
-                //spinnerActivity.
+                selectedActivity!!.addAll(activitiesList)
+                Log.e("ACTIVITY2",activity.name) ///working properly
+
             }
         }
 
+        if(hobbiesList != null)
+        {
+            for(hobby in hobbiesList)
+            {
+                selectedHobby.addAll(hobbiesList)
+                Log.e("HOBBY2",hobby.name) ///working properly
+            }
+        }
 
 
         val activitiesArray = resources.getStringArray(R.array.activities)
         for (activity in activitiesArray) {
             spinnerActivityListItem?.add(ListItem(activity))
+
         }
 
-        selectedActivity!!.clear()
+        selectedActivity.clear()
 
 
 
@@ -82,6 +91,7 @@ class PrefChanging : AppCompatActivity() {
         for(hobby in hobbyArray)
         {
             spinnerHobbyListItem?.add(ListItem(hobby))
+
         }
 
         selectedHobby.clear()
@@ -93,8 +103,8 @@ class PrefChanging : AppCompatActivity() {
 
         val adapter = MultiSelectSpinnerAdapter(this,
             spinnerActivityListItem!!,
-            selectedActivity!!)
-
+            selectedActivity)
+        adapter.updateSelectedItems(activitiesList!!.map { it.name })
         spinnerActivity?.adapter = adapter
 
         adapter.setOnItemSelectedListener(object :
@@ -113,7 +123,7 @@ class PrefChanging : AppCompatActivity() {
         val adapter2 = MultiSelectSpinnerAdapter(this,
             spinnerHobbyListItem!!,
             selectedHobby)
-
+        adapter2.updateSelectedItems(hobbiesList!!.map { it.name })
         spinnerHobby?.adapter = adapter2
 
         adapter2.setOnItemSelectedListener(object :

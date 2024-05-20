@@ -139,6 +139,7 @@ class AddHolidayActivity : AppCompatActivity() {
         val activity = selectedActivity?.map { it.name  to (it.itemId % 15)+1}?.toMap()
         val hobby = selectedHobby.map { it.name to (it.itemId % 15)+1 }.toMap()
         val isAccepted = false
+        val isRejected = false
 
         val countries = resources.getStringArray(R.array.countries)
 
@@ -182,6 +183,7 @@ class AddHolidayActivity : AppCompatActivity() {
                 firebaseRef.child(holidayName).child("name").setValue(holidayName)
                 firebaseRef.child(holidayName).child("description").setValue(description)
                 firebaseRef.child(holidayName).child("isAccepted").setValue(isAccepted)
+                firebaseRef.child(holidayName).child("isRejected").setValue(isRejected)
                     .addOnCompleteListener {
                         Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
                             .show()

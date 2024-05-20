@@ -146,10 +146,12 @@ class CalendarView : AppCompatActivity() {
                         var check1 = 0;
                         var check2 =0;
                         var check3 = 0; //for approval
+                        var check4 = 0; //for rejection
 
                         val hobbiesC = holidaySnapshot.child("Hobbies")
                         val activitiesC = holidaySnapshot.child("Activities")
                         val approvalC = holidaySnapshot.child("isAccepted")
+                        val rejectionC = holidaySnapshot.child("isRejected")
                         ///AKTYWNOSC + HOBBY - POBRANIE
                         val hobbyListC = mutableListOf<ListItem>()
                         for (hobbySnapshot in hobbiesC.children) {
@@ -181,12 +183,16 @@ class CalendarView : AppCompatActivity() {
                         {
                             check3 = 1;
                         }
+                        if(rejectionC.value == true)
+                        {
+                            check4 = 1;
+                        }
                         val author = holidaySnapshot.child("uid").getValue(String::class.java)
                         firebaseUserRD?.let { user ->
                             val userid = user.uid
 
 
-                            if (((check1 == 1) || (check2 == 1) || (author == userid)) && check3 == 1) {
+                            if (((check1 == 1 || check2 == 1) && check3 == 1 && check4 == 0) || author == userid) {
                                 val holidayName =
                                     holidaySnapshot.child("name").getValue(String::class.java)
                                 holidayName?.let { name ->
@@ -382,13 +388,33 @@ class CalendarView : AppCompatActivity() {
                             val description = holidaySnapshot.child("description").getValue(String::class.java)
                             val countryName = holidaySnapshot.child("Country").children.first().key
                             val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
+                            val hobbies = holidaySnapshot.child("Hobbies")
+                            val activities = holidaySnapshot.child("Activities")
                             if (holidayAuthor == uid) {
                                 val intent = Intent(this, EditHolidayActivity::class.java)
+                                val activityList = mutableListOf<ListItem>()
+                                val hobbyList = mutableListOf<ListItem>()
+                                for(activitySnapshot in activities.children)
+                                {
+                                    val activityName = activitySnapshot.key
+                                    activityName?.let{activityList.add(ListItem(it))}
+                                }
+                                for(hobbySnapshot in hobbies.children)
+                                {
+                                    val hobbyName = hobbySnapshot.key
+                                    hobbyName?.let{hobbyList.add(ListItem(it))}
+                                }
                                 intent.putExtra("dateKey", dateKey)
                                 intent.putExtra("holidayName", holidayName)
                                 intent.putExtra("description", description)
                                 intent.putExtra("country", countryName)
-
+                                if(hobbyList.isNotEmpty() && activityList.isNotEmpty())
+                                {
+                                    intent.putExtra("hobbies", hobbyList.toTypedArray())
+                                    intent.putExtra("activities", activityList.toTypedArray())
+                                }
+                                intent.putParcelableArrayListExtra("hobbies", ArrayList(hobbyList))
+                                intent.putParcelableArrayListExtra("activities",ArrayList(activityList))
                                 startActivity(intent)
                                 (it.context as? AlertDialog)?.dismiss()
                             } else {
