@@ -165,9 +165,10 @@ class EditHolidayActivity : AppCompatActivity() {
 
 
     private fun updateData() {
+        val size = spinnerActivityListItem!!.size + spinnerHobbyListItem!!.size
         val country = binding.countryAutoComplete.text.toString()
-        val activity = selectedActivity?.map { it.name to (it.itemId % 15)+1}?.toMap()
-        val hobby = selectedHobby.map { it.name to (it.itemId % 15)+1 }.toMap()
+        val activity = selectedActivity?.map { it.name  to (it.itemId % size)+1}?.toMap()
+        val hobby = selectedHobby.map { it.name to (it.itemId % size)+1 }.toMap()
 
         val countries = resources.getStringArray(R.array.countries)
 

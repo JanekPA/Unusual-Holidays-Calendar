@@ -60,13 +60,13 @@ class Profile : AppCompatActivity() {
         uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         loadImageFromFirebase()
 
-        val b1 = findViewById<ImageButton>(R.id.B1)
+        //val b1 = findViewById<ImageButton>(R.id.B1)
         val b2 = findViewById<ImageButton>(R.id.B2)
         val b3 = findViewById<ImageButton>(R.id.B3)
 
-        b1.setOnClickListener {
-            infoTextView.text = "Information for B1"
-        }
+        //b1.setOnClickListener {
+        //    infoTextView.text = "Information for B1"
+        //}
 
         b2.setOnClickListener {
             infoTextView.text = "Information for B2"
@@ -75,7 +75,6 @@ class Profile : AppCompatActivity() {
         b3.setOnClickListener {
             infoTextView.text = "Information for B3"
         }
-        infoTextView.text = "Information for B1"
 
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
@@ -157,6 +156,12 @@ class Profile : AppCompatActivity() {
 
                         val mainWindowTextView = findViewById<TextView>(R.id.info_text_view)
                         mainWindowTextView.text = holidayInfo.toString()
+
+                        val b1 = findViewById<ImageButton>(R.id.B1)
+
+                        b1.setOnClickListener {
+                           mainWindowTextView.text = holidayInfo.toString()
+                        }
                     }
                 }.addOnFailureListener { exception ->
                     Log.e("Firebase", "Error getting data", exception)

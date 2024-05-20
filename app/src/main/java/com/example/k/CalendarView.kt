@@ -440,9 +440,12 @@ class CalendarView : AppCompatActivity() {
         holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
 
+                val description = dataSnapshot.child("description").getValue(String::class.java)
+
                 val country = dataSnapshot.child("Country").children.map { activity ->
                     activity.key!!
                 }.toList()
+
                 val activities = dataSnapshot.child("Activities").children.map { activity ->
                     activity.key!!
                 }.toList()
@@ -452,8 +455,12 @@ class CalendarView : AppCompatActivity() {
                 }.toList()
 
                 val holidayInfo = StringBuilder()
+
+                holidayInfo.append("Description: $description\n")
+
                 val countryString = country.joinToString(", ")
-                holidayInfo.append("Country: $countryString\n")
+                holidayInfo.append("\nCountry: $countryString\n")
+
                 holidayInfo.append("\nDate: $fullDate\n\n")
 
                 holidayInfo.append("Activities:\n")

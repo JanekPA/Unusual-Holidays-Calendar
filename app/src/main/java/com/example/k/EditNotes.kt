@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.k.databinding.ActivityEditNotesBinding
-import com.example.k.models.ListItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -60,13 +59,11 @@ class EditNotes : AppCompatActivity() {
                             .addOnCompleteListener {
                                 Toast.makeText(this, "Data add successfully!", Toast.LENGTH_SHORT)
                                     .show()
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 finish()
-                                startActivity(
-                                    Intent(
-                                        this@EditNotes,
-                                        MainActivity::class.java
-                                    )
-                                )
+                                startActivity(intent)
                             }
                             .addOnFailureListener { exception ->
                                 Toast.makeText(
