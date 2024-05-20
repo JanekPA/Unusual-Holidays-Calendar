@@ -10,28 +10,29 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.example.k.R
 
-class MultiSelectSpinnerAdapter(context : Context,
+class MultiSelectSpinnerAdapter(context: Context,
                                 val items: List<ListItem>,
-private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(context,0,items) {
+                                private val selectedItems: MutableList<ListItem>) : ArrayAdapter<ListItem>(context, 0, items) {
     private val checkedItems = BooleanArray(items.size)
-    private var onItemSelectedListener : OnItemSelectedListener ?=null
+    private var onItemSelectedListener: OnItemSelectedListener? = null
 
-    interface OnItemSelectedListener{
+    interface OnItemSelectedListener {
         fun onItemSelected(
             selectedItems: List<ListItem>,
             pos: Int
         )
     }
+
     init {
-        for (i in items.indices)
-        {
+        for (i in items.indices) {
             checkedItems[i] = selectedItems.contains(items[i])
         }
     }
-    fun setOnItemSelectedListener(listener: OnItemSelectedListener?)
-    {
+
+    fun setOnItemSelectedListener(listener: OnItemSelectedListener?) {
         this.onItemSelectedListener = listener
     }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return createView(position, convertView, parent, false)
     }
@@ -39,6 +40,7 @@ private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(cont
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         return createView(position, convertView, parent, true)
     }
+
     private fun createView(position: Int, convertView: View?, parent: ViewGroup, isDropDown: Boolean): View {
         val view: View = convertView
             ?: LayoutInflater.from(context).inflate(
@@ -53,41 +55,46 @@ private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(cont
             val itemName = view.findViewById<TextView>(R.id.itemName)
 
             itemName.text = items[position].name
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                checkedItems[position] = isChecked
-                if (isChecked) {
+
+            checkBox.isChecked = checkedItems[position]
+
+            checkBox.setOnCheckedChangeListener(null) // Usuń starego listenera, żeby uniknąć konfliktów
+            checkBox.setOnClickListener {
+                checkedItems[position] = checkBox.isChecked
+                if (checkBox.isChecked) {
                     if (!selectedItems.contains(items[position])) {
                         selectedItems.add(items[position])
                     }
-
                 } else {
                     selectedItems.remove(items[position])
-
                 }
                 notifyDataSetChanged()
-                onItemSelectedListener?.onItemSelected(selectedItems,position)
-
+                onItemSelectedListener?.onItemSelected(selectedItems, position)
             }
         } else {
-            if (selectedItems.isEmpty()){
-                textView.text = "Select"
-            }
-            else{
-                val names : ArrayList<String>  = ArrayList()
-                for (i in getSelectedItems().indices){
+            textView.text = if (selectedItems.isEmpty()) {
+                "Select"
+            } else {
+                val names: ArrayList<String> = ArrayList()
+                for (i in getSelectedItems().indices) {
                     names.add(getSelectedItems()[i].name)
                 }
-                textView.text = names.toString().replace("[","").replace("]","")
-
+                names.toString().replace("[", "").replace("]", "")
             }
+
+            // Update checkbox state
+            val checkBox = view.findViewById<CheckBox>(R.id.spinnerCheckbox)
+            checkBox.isChecked = checkedItems[position]
+            checkBox.setOnClickListener(null) // Usuń listener, aby uniknąć konfliktów
         }
 
         return view
     }
 
-    private fun getSelectedItems(): List<ListItem>  {
+    private fun getSelectedItems(): List<ListItem> {
         return selectedItems
     }
+
     fun setSelectedPositions(positions: List<Int>) {
         selectedItems.clear()
         positions.forEach { index ->
@@ -97,5 +104,21 @@ private val selectedItems : MutableList<ListItem>) : ArrayAdapter<ListItem>(cont
             }
         }
         notifyDataSetChanged()
+    }
+
+    fun updateSelectedItems(names: List<String>) {
+        for (i in items.indices) {
+            val name = items[i].name
+            val isChecked = names.contains(name)
+            checkedItems[i] = isChecked // Aktualizacja zaznaczenia w tablicy checkedItems
+            if (isChecked) {
+                if (!selectedItems.contains(items[i])) {
+                    selectedItems.add(items[i]) // Dodaj element do listy zaznaczonych, jeśli jest zaznaczony
+                }
+            } else {
+                selectedItems.remove(items[i]) // Usuń element z listy zaznaczonych, jeśli nie jest zaznaczony
+            }
+        }
+        notifyDataSetChanged() // Powiadom adapter o zmianach w danych
     }
 }

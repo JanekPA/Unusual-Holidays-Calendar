@@ -103,10 +103,13 @@ class HolidayApproval : AppCompatActivity() {
                             everyHolidaySnapshot.child("isAccepted")
                                 .getValue(Boolean::class.java)
                         }
+                        val isRejected = holidayName?.let{
+                            everyHolidaySnapshot.child("isRejected").getValue(Boolean::class.java)
+                        }
 
                     Log.e("HOLIDAYDATA", "$isAccepted")
 
-                    if (isAccepted == false) {
+                    if (isAccepted == false && isRejected == false) {
                         val customButton =
                             layoutInflater.inflate(R.layout.custom_button_layout, null) as Button
 
@@ -131,7 +134,7 @@ class HolidayApproval : AppCompatActivity() {
                 }
             } else {
                 val noHolidayButton = Button(this)
-                noHolidayButton.text = "No holidays found XD"
+                noHolidayButton.text = "No holidays found! "
                 holidayNamesLayout.removeAllViews()
                 holidayNamesLayout.addView(noHolidayButton)
             }
@@ -360,6 +363,7 @@ class HolidayApproval : AppCompatActivity() {
         rejectButton.setOnClickListener{
             // Update isAccepted to false in the database
             holidaysRef.child(dateKey).child(holidayName).child("isAccepted").setValue(false)
+                holidaysRef.child(dateKey).child(holidayName).child("isRejected").setValue(true)
                 .addOnSuccessListener {
                     // Dismiss the dialog after successful update
                     dialog.dismiss()

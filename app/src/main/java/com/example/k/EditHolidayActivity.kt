@@ -24,7 +24,7 @@ class EditHolidayActivity : AppCompatActivity() {
     private lateinit var countryAutoCompleteText: AutoCompleteTextView
     private lateinit var updateButton: Button
     private lateinit var binding: ActivityEditHolidayBinding
-    private var selectedActivity: MutableList<ListItem>? = mutableListOf()
+    private var selectedActivity: MutableList<ListItem> = mutableListOf()
     private var spinnerActivityListItem: ArrayList<ListItem>? = ArrayList()
     private var selectedHobby: MutableList<ListItem> = mutableListOf()
     private var spinnerHobbyListItem: ArrayList<ListItem>? = ArrayList()
@@ -52,12 +52,28 @@ class EditHolidayActivity : AppCompatActivity() {
         nameActivity = findViewById(R.id.activityHead)
         nameHobby = findViewById(R.id.hobbyHead)
 
+        val activitiesList: ArrayList<ListItem>? = intent.getParcelableArrayListExtra("activities")
+        val hobbiesList: ArrayList<ListItem>? = intent.getParcelableArrayListExtra("hobbies")
+        if(activitiesList != null)
+        {
+            for(activity in activitiesList)
+            {
+                selectedActivity.addAll(activitiesList)
+            }
+        }
+        if(hobbiesList != null)
+        {
+            for(activity in hobbiesList)
+            {
+                selectedHobby.addAll(hobbiesList)
+            }
+        }
         val activitiesArray = resources.getStringArray(R.array.activities)
         for (activity in activitiesArray) {
             spinnerActivityListItem?.add(ListItem(activity))
         }
 
-        selectedActivity!!.clear()
+        selectedActivity.clear()
 
         val hobbyArray = resources.getStringArray(R.array.hobbys)
         for (hobby in hobbyArray) {
@@ -75,9 +91,9 @@ class EditHolidayActivity : AppCompatActivity() {
         val adapter = MultiSelectSpinnerAdapter(
             this,
             spinnerActivityListItem!!,
-            selectedActivity!!
+            selectedActivity
         )
-
+        adapter.updateSelectedItems(activitiesList!!.map{it.name})
         spinnerActivity?.adapter = adapter
 
         adapter.setOnItemSelectedListener(object :
@@ -98,7 +114,7 @@ class EditHolidayActivity : AppCompatActivity() {
             spinnerHobbyListItem!!,
             selectedHobby
         )
-
+        adapter2.updateSelectedItems(hobbiesList!!.map{it.name})
         spinnerHobby?.adapter = adapter2
 
         adapter2.setOnItemSelectedListener(object :
@@ -182,6 +198,7 @@ class EditHolidayActivity : AppCompatActivity() {
             val database = FirebaseDatabase.getInstance()
             val holidaysRef = database.getReference("HolidayNames")
             val isAccepted = false
+            val isRejected = false
 
             val firebaseReff = FirebaseDatabase.getInstance().getReference("HolidayNames").child(
                 dateKey.toString()
@@ -206,6 +223,7 @@ class EditHolidayActivity : AppCompatActivity() {
                         firebaseRef.child(newHolidayName).child("name").setValue(newHolidayName)
                         firebaseRef.child(newHolidayName).child("description").setValue(description)
                         firebaseRef.child(newHolidayName).child("isAccepted").setValue(isAccepted)
+                        firebaseRef.child(newHolidayName).child("isRejected").setValue(isRejected)
                             .addOnCompleteListener {
                                 Toast.makeText(
                                     this,

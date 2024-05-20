@@ -261,6 +261,9 @@ class MainActivity : AppCompatActivity() {
                             Log.e("ACTIVITY", activity.name) ///working properly
                         }
                     }
+                    intent.putParcelableArrayListExtra("hobbies", ArrayList(hobbyList))
+                    intent.putParcelableArrayListExtra("activities",ArrayList(activityList))
+
                     startActivity(intent)
                 }
             }
