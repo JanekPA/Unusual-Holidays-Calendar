@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import android.content.res.Configuration
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class Settings : AppCompatActivity() {
     private lateinit var binding: SettingsBinding
@@ -34,6 +37,9 @@ class Settings : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
+
+
+
         binding = SettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViews()
