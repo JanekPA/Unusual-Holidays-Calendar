@@ -112,6 +112,8 @@ class MainActivity : AppCompatActivity() {
         loadNotes()
 
         retrievingDataToEditNotes()
+
+        loadHolidaysForToday()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -368,6 +370,45 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private fun loadHolidaysForToday() {
+        val currentDate = Calendar.getInstance()
+        val dayOfMonth = currentDate.get(Calendar.DAY_OF_MONTH)
+        val monthOfYear = currentDate.get(Calendar.MONTH) + 1 // Months are zero-based in Calendar, so we add 1
+
+        val todayDate = "$dayOfMonth-${monthOfYear.toString().padStart(2, '0')}"
+
+        val holidayNamesRef = FirebaseDatabase.getInstance().getReference("HolidayNames").child(todayDate)
+
+        holidayNamesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val holidayNames = mutableListOf<String>()
+                    for (holidaySnapshot in dataSnapshot.children) {
+                        val holidayName = holidaySnapshot.child("name").getValue(String::class.java)
+                        holidayName?.let {
+                            holidayNames.add(it)
+                        }
+                    }
+                    if (holidayNames.isNotEmpty()) {
+                        val holidaysTextView: TextView = findViewById(R.id.Holidays)
+                        holidaysTextView.text = holidayNames.joinToString(", ")
+                    } else {
+                        val holidaysTextView: TextView = findViewById(R.id.Holidays)
+                        holidaysTextView.text = "No holidays for today"
+                    }
+                } else {
+                    val holidaysTextView: TextView = findViewById(R.id.Holidays)
+                    holidaysTextView.text = "No holidays for today"
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("AddHolidayActivity", "Error loading holiday names from Firebase: $databaseError")
+            }
+        })
+    }
+
+
 
 
 
