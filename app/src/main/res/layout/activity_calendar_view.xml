@@ -93,6 +93,15 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
+                android:id="@+id/home_Options"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/home" />
+
+            <ImageButton
                 android:id="@+id/CalendarV_Options"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -100,15 +109,6 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:src="@drawable/bar_calendar" />
-
-            <ImageButton
-                android:id="@+id/Community_Options"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/community" />
 
             <ImageButton
                 android:id="@+id/Add_button_Options"
@@ -129,13 +129,13 @@
                 android:src="@drawable/base_edit_note_24" />
 
             <ImageButton
-                android:id="@+id/button5_Options"
+                android:id="@+id/notification_Options"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bar_empty" />
+                android:src="@drawable/notify_yes" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

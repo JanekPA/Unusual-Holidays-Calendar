@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
         }
-        binding.communityMain?.setOnClickListener {
+        binding.notification?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }

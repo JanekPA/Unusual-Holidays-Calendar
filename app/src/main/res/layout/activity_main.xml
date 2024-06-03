@@ -26,7 +26,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.01" />
+            app:layout_constraintVertical_bias="0.021" />
 
         <TextView
             android:id="@+id/yearTextView"
@@ -38,7 +38,7 @@
             android:textSize="36sp"
             app:layout_constraintBottom_toTopOf="@+id/month"
             app:layout_constraintEnd_toEndOf="@+id/calendarIcon"
-            app:layout_constraintHorizontal_bias="0.847"
+            app:layout_constraintHorizontal_bias="0.864"
             app:layout_constraintStart_toStartOf="@+id/calendarIcon"
             app:layout_constraintTop_toTopOf="@+id/calendarIcon"
             app:layout_constraintVertical_bias="0.333" />
@@ -64,7 +64,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:textColor="@color/text_color"
-            android:textSize="200sp"
+            android:textSize="220sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -76,14 +76,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textColor="@color/text_color"
 
-            android:textSize="36sp"
+            android:textSize="32sp"
             app:layout_constraintStart_toStartOf="@+id/calendarIcon"
-            app:layout_constraintTop_toBottomOf="@+id/idDate" />
+            app:layout_constraintTop_toTopOf="@+id/calendarIcon" />
 
         <TextView
             android:id="@+id/Holidays"
@@ -97,7 +97,7 @@
 
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/calendarIcon"
-            app:layout_constraintTop_toBottomOf="@+id/dayname" />
+            app:layout_constraintTop_toBottomOf="@+id/idDate" />
 
         <LinearLayout
             android:id="@+id/Bar_new"
@@ -157,13 +157,12 @@
             android:id="@+id/Account_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="88dp"
             android:background="@drawable/main_account_button"
             android:tint="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/BottomBarMain"
@@ -177,22 +176,22 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
+                android:id="@+id/home"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/home" />
+
+            <ImageButton
                 android:id="@+id/CalendarV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bar_calendar" />
-
-            <ImageButton
-                android:id="@+id/community_main"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/community" />
+                android:src="@drawable/calendar" />
 
             <ImageButton
                 android:id="@+id/Add_button"
@@ -213,13 +212,13 @@
                 android:src="@drawable/base_edit_note_24" />
 
             <ImageButton
-                android:id="@+id/button5"
+                android:id="@+id/notification"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bar_empty" />
+                android:src="@drawable/notify_yes" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

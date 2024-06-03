@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -34,6 +36,12 @@ class Community : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        firebaseUser?.let { user ->
+            generateMessageButtons(user.uid)
+        }
+        setContentView(R.layout.community)
         binding = CommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViews()
@@ -106,14 +114,12 @@ class Community : AppCompatActivity() {
 
     private fun setupViews() {
 
-        binding.AccountButton?.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
+
         binding.CalendarVCommunity.setOnClickListener {
             val intent = Intent(this, CalendarView::class.java)
             startActivity(intent)
         }
-        binding.button2Community?.setOnClickListener {
+        binding.notificationCommunity?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
@@ -123,6 +129,10 @@ class Community : AppCompatActivity() {
         }
         binding.button4Community?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
+        binding.homeCommunity?.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
         drawerLayout = binding.myDrawerLayout
@@ -218,4 +228,54 @@ class Community : AppCompatActivity() {
 
         }
     }
+    private fun generateMessageButtons(uid: String) {
+        val messagesRef = FirebaseDatabase.getInstance().getReference("messages").child(uid)
+
+        messagesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val messagesLayout: LinearLayout? = findViewById(R.id.messageslayout)
+
+                if (messagesLayout == null) {
+                    Log.e("Community", "messagesLayout is null")
+                    return
+                }
+
+                messagesLayout.removeAllViews()
+
+                for (messageSnapshot in dataSnapshot.children) {
+                    val message = messageSnapshot.getValue(String::class.java)
+
+                    if (message != null) {
+
+                        val messageButtonView = layoutInflater.inflate(R.layout.messagebutton, null) as Button
+                        val messageButton = messageButtonView.findViewById<Button>(R.id.MessageButton)
+
+
+                        messageButton.text = message
+
+
+                        messageButton.setOnClickListener {
+                            Toast.makeText(this@Community, message, Toast.LENGTH_SHORT).show()
+                        }
+
+
+                        messagesLayout.addView(messageButtonView)
+                    }
+                }
+
+                if (messagesLayout.childCount == 0) {
+                    // If no messages found, display a message
+                    val noMessagesButton = Button(this@Community)
+                    noMessagesButton.text = "No messages found"
+                    messagesLayout.addView(noMessagesButton)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("Community", "Error fetching messages: ${databaseError.message}")
+                Toast.makeText(this@Community, "Error fetching messages.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 }

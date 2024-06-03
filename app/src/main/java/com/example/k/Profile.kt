@@ -262,12 +262,16 @@ class Profile : AppCompatActivity() {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
         }
-        binding.communityProfile?.setOnClickListener {
+        binding.notificationProfile?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
         binding.button4Profile?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
+        binding.homeProfile?.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
         drawerLayout = binding.myDrawerLayout

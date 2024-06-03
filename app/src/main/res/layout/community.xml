@@ -14,15 +14,15 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <Button
-            android:id="@+id/Account_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="44dp"
-            android:background="@drawable/main_account_button"
+
+        <LinearLayout
+            android:id="@+id/messageslayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/Bar_P"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/BarCommunity"
@@ -38,6 +38,15 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
+                android:id="@+id/home_Community"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/home" />
+
+            <ImageButton
                 android:id="@+id/CalendarV_Community"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -45,15 +54,6 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:src="@drawable/bar_calendar" />
-
-            <ImageButton
-                android:id="@+id/button2_Community"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/community" />
 
             <ImageButton
                 android:id="@+id/Add_button_Community"
@@ -74,17 +74,38 @@
                 android:src="@drawable/base_edit_note_24" />
 
             <ImageButton
-                android:id="@+id/button5_Community"
+                android:id="@+id/notification_Community"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bar_empty" />
+                android:src="@drawable/notify_yes" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/Bar_P"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bar_p_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="-5dp">
 
+            <ImageButton
+                android:id="@+id/B2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notify_yes" />
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

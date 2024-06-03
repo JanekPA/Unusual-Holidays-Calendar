@@ -231,12 +231,16 @@ class HolidayApproval : AppCompatActivity() {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
         }
-        binding.CommunityOptions?.setOnClickListener {
+        binding.notificationOptions?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
         binding.button4Options?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
+        binding.homeOptions?.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -296,41 +300,6 @@ class HolidayApproval : AppCompatActivity() {
         val holidaysRef = FirebaseDatabase.getInstance().getReference("HolidayNames")
         val acceptButton = dialogView.findViewById<Button>(R.id.acceptHoliday)
         val rejectButton = dialogView.findViewById<Button>(R.id.rejectHoliday)
-        /*val editButton = dialogView.findViewById<Button>(R.id.editHoly)
-        editButton.setOnClickListener {
-
-            val firebaseAuth = FirebaseAuth.getInstance()
-            val firebaseUser = firebaseAuth.currentUser
-            firebaseUser?.let { user ->
-                val uid = user.uid
-                Log.e("HOLIDAYAPPROVAL","$dateKey, $holidayName")
-                holidaysRef.child(dateKey).child(holidayName).get()
-                    .addOnSuccessListener { holidaySnapshot ->
-                        Log.d("HolidayApproval", "Holiday snapshot value: $holidaySnapshot")
-                        if (holidaySnapshot.exists()) {
-                            val countryName = holidaySnapshot.child("Country").children.first().key
-                            val holidayAuthor = holidaySnapshot.child("uid").getValue(String::class.java)
-                            if(holidayAuthor == uid) {
-                                val intent = Intent(this, EditHolidayActivity::class.java)
-                                intent.putExtra("dateKey", dateKey)
-                                intent.putExtra("holidayName", holidayName)
-                                intent.putExtra("country", countryName)
-
-                                startActivity(intent)
-                                (it.context as? AlertDialog)?.dismiss()
-                            }
-                            else
-                            {
-                                Toast.makeText(
-                                    this,
-                                    "You are not author, you can not modify!",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-            }
-        }*/
 
         val builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
@@ -338,7 +307,8 @@ class HolidayApproval : AppCompatActivity() {
         val dialog = builder.create()
 
         dialog.show()
-        Log.e("HOLIDAYAPPROVAL","$dateKey, $holidayName")
+
+        Log.e("HOLIDAYAPPROVAL", "$dateKey, $holidayName")
         holidaysRef.child(dateKey).child(holidayName).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
                 Log.d("HolidayApproval", "Data snapshot value: $dataSnapshot")
@@ -348,7 +318,6 @@ class HolidayApproval : AppCompatActivity() {
                 val country = dataSnapshot.child("Country").children.map { activity ->
                     activity.key!!
                 }.toList()
-
 
                 val activities = dataSnapshot.child("Activities").children.map { activity ->
                     activity.key!!
@@ -385,26 +354,45 @@ class HolidayApproval : AppCompatActivity() {
         }
 
         val customButton = customsButtonMap[dateKey]
-        // Set onClick listeners for accept and reject buttons
-        acceptButton.setOnClickListener{
-            // Update isAccepted to true in the database
-            holidaysRef.child(dateKey).child(holidayName).child("isAccepted").setValue(true)
-                .addOnSuccessListener {
-                    // Dismiss the dialog after successful update
-                    dialog.dismiss()
-                    holidayNamesLayout.removeView(customButton)
-                }
-        }
 
-        rejectButton.setOnClickListener{
-            // Update isAccepted to false in the database
-            holidaysRef.child(dateKey).child(holidayName).child("isAccepted").setValue(false)
+        // Get the UID of the user who requested the holiday (assuming the UID is stored in the holiday data)
+        val uidRef = holidaysRef.child(dateKey).child(holidayName).child("uid")
+        uidRef.get().addOnSuccessListener { dataSnapshot ->
+            val uid = dataSnapshot.value as? String
+
+            // Set onClick listeners for accept and reject buttons
+            acceptButton.setOnClickListener {
+                // Update isAccepted to true in the database
+                holidaysRef.child(dateKey).child(holidayName).child("isAccepted").setValue(true)
+                    .addOnSuccessListener {
+                        // Dismiss the dialog after successful update
+                        dialog.dismiss()
+                        holidayNamesLayout.removeView(customButton)
+                        uid?.let {
+                            logApprovalMessage(it, dateKey, holidayName, "approved")
+                        }
+                    }
+            }
+
+            rejectButton.setOnClickListener {
+                // Update isAccepted to false in the database
+                holidaysRef.child(dateKey).child(holidayName).child("isAccepted").setValue(false)
                 holidaysRef.child(dateKey).child(holidayName).child("isRejected").setValue(true)
-                .addOnSuccessListener {
-                    // Dismiss the dialog after successful update
-                    dialog.dismiss()
-                    holidayNamesLayout.removeView(customButton)
-                }
+                    .addOnSuccessListener {
+                        // Dismiss the dialog after successful update
+                        dialog.dismiss()
+                        holidayNamesLayout.removeView(customButton)
+                        uid?.let {
+                            logApprovalMessage(it, dateKey, holidayName, "denied")
+                        }
+                    }
+            }
         }
     }
+    private fun logApprovalMessage(uid: String, dateKey: String, holidayName: String, status: String) {
+        val messagesRef = FirebaseDatabase.getInstance().getReference("messages")
+        val message = "Holiday '$holidayName' on '$dateKey' has been $status."
+        messagesRef.child(uid).push().setValue(message)
+    }
+
 }
