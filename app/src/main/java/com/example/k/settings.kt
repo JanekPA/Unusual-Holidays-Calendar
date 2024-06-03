@@ -123,7 +123,7 @@ class Settings : AppCompatActivity() {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
         }
-        binding.CommunityOptions?.setOnClickListener {
+        binding.notificationOptions?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
         }
@@ -133,6 +133,10 @@ class Settings : AppCompatActivity() {
         }
         binding.button4Options?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
+            startActivity(intent)
+        }
+        binding.homeOptions?.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 

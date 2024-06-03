@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MessageButton"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginTop="0dp"
+    android:textSize="20dp"
+    android:textAlignment="textStart"
+    android:textColor="@color/white"
+    android:text="Message"
+    android:background="@drawable/messagebutton_background"
+    android:paddingEnd="16dp"/>
