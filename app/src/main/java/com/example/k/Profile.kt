@@ -388,4 +388,11 @@ class Profile : AppCompatActivity() {
             }
         })
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
 }
