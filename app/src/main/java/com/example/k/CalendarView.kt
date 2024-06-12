@@ -73,14 +73,17 @@ class CalendarView : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
                     retrievingDataToPrefChanging()
+                    finish()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 R.id.nav_settings -> {
                     val intent = Intent(this, Settings::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 R.id.Logout_button -> logout()
             }
@@ -236,22 +239,27 @@ class CalendarView : AppCompatActivity() {
         binding.CalendarVOptions.setOnClickListener {
             val intent = Intent(this, CalendarView::class.java)
             startActivity(intent)
+            finish()
         }
         binding.AddButtonOptions?.setOnClickListener {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.notificationOptions?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
+            finish()
         }
         binding.button4Options?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
             startActivity(intent)
+            finish()
         }
         binding.homeOptions?.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         drawerLayout = binding.myDrawerLayout
@@ -378,6 +386,7 @@ class CalendarView : AppCompatActivity() {
                     intent.putParcelableArrayListExtra("activities",ArrayList(activityList))
 
                     startActivity(intent)
+                    finish()
                 }
             }
 
@@ -537,9 +546,9 @@ class CalendarView : AppCompatActivity() {
     }
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
+        val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
+        finish()
     }
 }

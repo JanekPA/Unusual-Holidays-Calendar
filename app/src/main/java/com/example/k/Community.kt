@@ -65,14 +65,17 @@ class Community : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_preferences -> {
                     retrievingDataToPrefChanging()
+                    finish()
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(this, Profile::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 R.id.nav_settings -> {
                     val intent = Intent(this, Settings::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 R.id.Logout_button -> logout()
             }
@@ -118,22 +121,27 @@ class Community : AppCompatActivity() {
         binding.CalendarVCommunity.setOnClickListener {
             val intent = Intent(this, CalendarView::class.java)
             startActivity(intent)
+            finish()
         }
         binding.notificationCommunity?.setOnClickListener {
             val intent = Intent(this, Community::class.java)
             startActivity(intent)
+            finish()
         }
         binding.AddButtonCommunity.setOnClickListener {
             val intent = Intent(this, AddHolidayActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.button4Community?.setOnClickListener {
             val intent = Intent(this, AddNotes::class.java)
             startActivity(intent)
+            finish()
         }
         binding.homeCommunity?.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
         drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
@@ -223,6 +231,7 @@ class Community : AppCompatActivity() {
                     intent.putParcelableArrayListExtra("activities",ArrayList(activityList))
 
                     startActivity(intent)
+                    finish()
                 }
             }
 
@@ -276,6 +285,14 @@ class Community : AppCompatActivity() {
                 Toast.makeText(this@Community, "Error fetching messages.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
     }
 
 }

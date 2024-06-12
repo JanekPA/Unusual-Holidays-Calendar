@@ -414,6 +414,7 @@ class MainActivity : AppCompatActivity() {
         intent.addCategory(Intent.CATEGORY_HOME)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
+        finish()
     }
 
 }
